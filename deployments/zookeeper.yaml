@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: zookeeper
+  name: zookeeper
+  namespace: broker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zookeeper
+  template:
+    metadata:
+      labels:
+        app: zookeeper
+    spec:
+      containers:
+        - image: confluentinc/cp-zookeeper
+          ports:
+            - containerPort: 2181
+          volumeMounts:
+            - name: zookeeper-data
+              mountPath: /var/lib/zookeeper/data
+            - name: zookeeper-log
+              mountPath: /var/lib/zookeeper/log
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zoonavigator-api
+  namespace: broker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zoonavigator-api
+  template:
+    metadata:
+      labels:
+        app: zoonavigator-api
+    spec:
+      containers:
+        - name: zoonavigator-api
+          image: elkozmon/zoonavigator-api:latest
+          ports:
+            - containerPort: 9000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zoonavigator-web
+  namespace: broker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zoonavigator-web
+  template:
+    metadata:
+      labels:
+        app: zoonavigator-web
+    spec:
+      containers:
+        - name: zoonavigator-web
+          image: elkozmon/zoonavigator-web:latest
+          ports:
+            - containerPort: 8000
+          env:
+            - name: API_HOST
+              value: "zoonavigator-api"
+            - name: API_PORT
+              value: "9000"

@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+  namespace: metric
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      containers:
+        - name: prometheus
+          image: prom/prometheus:latest
+          ports:
+            - containerPort: 9090
+          volumeMounts:
+            - name: prometheus-data
+              mountPath: /prometheus
+            - name: prometheus-config
+              mountPath: /etc/prometheus
+          command:
+            - '/bin/sh'
+            - '-c'
+            - 'prometheus --config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus --web.console.libraries=/etc/prometheus/console_libraries --web.console.templates=/etc/prometheus/consoles --storage.tsdb.retention.time=200h --web.enable-lifecycle'
+      volumes:
+        - name: prometheus-data
+          persistentVolumeClaim:
+            claimName: prometheus-data
+        - name: prometheus-config
+          hostPath:
+            path: /path/to/prometheus/config
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodeexporter
+  namespace: metric
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nodeexporter
+  template:
+    metadata:
+      labels:
+        app: nodeexporter
+    spec:
+      containers:
+        - name: nodeexporter
+          image: prom/node-exporter:latest
+          ports:
+            - containerPort: 9100

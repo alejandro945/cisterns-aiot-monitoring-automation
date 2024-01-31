@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources: 
+  - namespaces/app-ns.yaml
+  - namespaces/broker-ns.yaml
+  - namespaces/data-ns.yaml
+  - namespaces/metric-ns.yaml
+  - volumes/grafana-volume.yaml 
+  - volumes/kafka-volume.yaml
+  - volumes/prometheus-volume.yaml
+  - volumes/zookeeper-volume.yaml
+  - deployments/grafana.yaml
+  - deployments/kafka.yaml
+  - deployments/mongo.yaml
+  - deployments/mosquitto.yaml
+  - deployments/prometheus.yaml
+  - deployments/zookeeper.yaml
+
+  

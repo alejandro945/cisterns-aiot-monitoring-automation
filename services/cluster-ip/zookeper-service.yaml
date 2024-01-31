@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: zookeeper
+  namespace: broker
+spec:
+  selector:
+    app: zookeeper
+  ports:
+    - protocol: TCP
+      port: 2181
+      targetPort: 2181
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zoonavigator-api
+  namespace: broker
+spec:
+  selector:
+    app: zoonavigator-api
+  ports:
+    - protocol: TCP
+      port: 9000
+      targetPort: 9000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zoonavigator-web
+  namespace: broker
+spec:
+  selector:
+    app: zoonavigator-web
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
