@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zoonavigator-api
+  namespace: broker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zoonavigator-api
+  template:
+    metadata:
+      labels:
+        app: zoonavigator-api
+    spec:
+      containers:
+        - name: zoonavigator-api
+          image: elkozmon/zoonavigator:latest
+          ports:
+            - containerPort: 9000

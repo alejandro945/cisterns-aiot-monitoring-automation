@@ -18,20 +18,11 @@ spec:
           image: mongo
           env:
             - name: MONGO_INITDB_ROOT_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: mongo-secret
-                  key: mongo-root-username
+              value: "admin"
             - name: MONGO_INITDB_ROOT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: mongo-secret
-                  key: mongo-root-password
+              value: "admin"
             - name: MONGO_INITDB_DATABASE
-              valueFrom:
-                secretKeyRef:
-                  name: mongo-secret
-                  key: mongo-database
+              value: "admin"
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -51,6 +42,8 @@ spec:
       containers:
         - name: mongo-express
           image: mongo-express
+          ports:
+            - containerPort: 8081
           env:
             - name: ME_CONFIG_MONGODB_SERVER
               value: "mongo"
@@ -61,22 +54,10 @@ spec:
             - name: ME_CONFIG_MONGODB_AUTH_DATABASE
               value: "admin"
             - name: ME_CONFIG_MONGODB_ADMINUSERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: mongo-secret
-                  key: mongo-root-username
+              value: "admin"
             - name: ME_CONFIG_MONGODB_ADMINPASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: mongo-secret
-                  key: mongo-root-password
+              value: "admin"
             - name: ME_CONFIG_BASICAUTH_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: mongo-secret
-                  key: mongoexpress-login
+              value: "admin"
             - name: ME_CONFIG_BASICAUTH_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: mongo-secret
-                  key: mongoexpress-password
+              value: "admin"

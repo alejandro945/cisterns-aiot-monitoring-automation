@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: zookeeper
+  name: zookeeper
+  namespace: broker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zookeeper
+  template:
+    metadata:
+      labels:
+        app: zookeeper
+    spec:
+      volumes:
+        - name: zookeeper-data
+          persistentVolumeClaim:
+            claimName: zookeeper-data-claim
+        - name: zookeeper-log
+          persistentVolumeClaim:
+            claimName: zookeeper-log-claim
+      containers:
+        - name: zookeeper
+          image: confluentinc/cp-zookeeper
+          ports:
+            - containerPort: 2181
+          volumeMounts:
+            - name: zookeeper-data
+              mountPath: /var/lib/zookeeper
+            - name: zookeeper-log
+              mountPath: /log
+          env:
+            - name: ZOOKEEPER_CLIENT_PORT
+              value: "2181"
+            - name: ALLOW_ANONYMOUS_LOGIN
+              value: "yes"

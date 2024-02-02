@@ -2,7 +2,6 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: zookeeper-data
-  namespace: broker
 spec:
   storageClassName: local-storage
   capacity:
@@ -10,13 +9,25 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/var/lib/zookeeper/data"
+    path: "/var/lib/zookeeper"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: zookeeper-data-claim
+  namespace: broker
+spec:
+  storageClassName: local-storage
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: zookeeper-log
-  namespace: broker
 spec:
   storageClassName: local-storage
   capacity:
@@ -24,4 +35,17 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/var/lib/zookeeper/log"
+    path: "/log"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: zookeeper-log-claim
+  namespace: broker
+spec:
+  storageClassName: local-storage
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
