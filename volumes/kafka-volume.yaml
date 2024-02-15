@@ -37,7 +37,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/data"
+    path: "/opt/ttt/ttt_pwd/iot_event_streaming_architecture/kafka_connect/data"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

@@ -27,7 +27,7 @@ spec:
             - -c
             - |
               echo "Launching Kafka Connect worker"
-              /etc/confluent/docker/run &
+              /etc/confluent/docker/run
               #
               echo "Waiting for Kafka Connect to start listening on http://$CONNECT_REST_ADVERTISED_HOST_NAME:$CONNECT_REST_PORT/connectors ⏳"
               while [ $(curl -s -o /dev/null -w %{http_code} http://$CONNECT_REST_ADVERTISED_HOST_NAME:$CONNECT_REST_PORT/connectors) -ne 200 ] ; do 
@@ -39,12 +39,12 @@ spec:
               /data/scripts/create_mongo_sink.sh 
               echo -e "\n--\n+> Creating MQTT Source Connect Current PATH ($PWD)"
               /data/scripts/create_mqtt_source.sh
-              echo -e "\n--\n+> Creating Kafka Connect Prometheus sink Current PATH ($PWD)"
-              /data/scripts/create_prometheus_sink.sh
+              #echo -e "\n--\n+> Creating Kafka Connect Prometheus sink Current PATH ($PWD)"
+              #/data/scripts/create_prometheus_sink.sh
               sleep infinity
           env:
             - name: CONNECT_BOOTSTRAP_SERVERS
-              value: "kafka:9092"
+              value: "http://kafka:9092"
             - name: CONNECT_GROUP_ID
               value: "kafka-connect-group"
             - name: CONNECT_CONFIG_STORAGE_TOPIC

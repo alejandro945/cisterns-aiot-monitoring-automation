@@ -43,7 +43,3 @@ spec:
               value: "PLAINTEXT://kafka:9092"
             - name: KAFKA_AUTO_CREATE_TOPICS_ENABLE
               value: "true"
-            - name: KAFKA_BROKER_ID
-              value: "1"
-            - name: ALLOW_PLAINTEXT_LISTENER
-              value: "yes"

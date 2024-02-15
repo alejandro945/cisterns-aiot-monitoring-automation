@@ -19,3 +19,23 @@ Desarrollar y validar un sistema tele-informático que permita automatizar el pr
 ## Infrastructure
 
 ![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/4a1050bc-38bc-4e78-bf12-6830f6fd9cca)
+
+
+## Deployment
+
+kubectl create namespace kafka
+kubectl create -f 'https://strimzi.io/install/latest?namespace=kafka' -n kafka
+kubectl apply -f https://strimzi.io/examples/latest/kafka/kafka-persistent-single.yaml -n kafka 
+kubectl wait kafka/my-cluster --for=condition=Ready --timeout=300s -n kafka 
+
+## UI
+
+helm repo add kafka-ui https://provectus.github.io/kafka-ui-charts
+helm install kafka-ui kafka-ui/kafka-ui \
+   --set envs.config.KAFKA_CLUSTERS_0_NAME=local \
+   --set envs.config.KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=my-cluster-kafka-bootstrap:9092 \
+   --namespace kafka
+
+## Delete resources
+kubectl -n kafka delete -f 'https://strimzi.io/install/latest?namespace=kafka'
+kubectl -n kafka delete $(kubectl get strimzi -o name -n kafka)
