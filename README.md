@@ -130,8 +130,16 @@ helm install kafka-ui kafka-ui/kafka-ui \
 ## Delete resources
 
 ```bash
+kubectl delete -f ./message-broker/kafka.yaml -n kafka
+kubectl -n monitoring delete -f ./monitoring/prometheus/prometheus.yaml
+kubectl -n monitoring delete -f ./monitoring/strimzi-pod-monitor.yaml
+kubectl -n monitoring delete -f ./monitoring/grafana/grafana.yaml
 kubectl -n kafka delete -f 'https://strimzi.io/install/latest?namespace=kafka'
-kubectl -n kafka delete $(kubectl get strimzi -o name -n kafka)
-helm uninstall kafka-ui -n kafka
+kubectl -n kafka delete -f ./monitoring/prometheus/prometheus-operator-deployment.yaml -n monitoring
+kubectl -n kafka delete -f ./message-broker/kafka-metrics-config.yaml
+kubectl -n kafka delete -f ./message-broker/zookeeper-metrics-config.yaml
+kubectl delete namespace kafka
+kubectl delete namespace monitoring
+# helm uninstall kafka-ui -n kafka
 minikube stop
 ```
