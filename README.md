@@ -20,7 +20,10 @@ Desarrollar y validar un sistema tele-informático que permita automatizar el pr
 
 ![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/4a1050bc-38bc-4e78-bf12-6830f6fd9cca)
 
-## Deployment
+## IOT 4 Layers
+![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/bafb3114-074f-4920-a3dd-135c4032a9c8)
+
+## Deployment
 
 1. Install Minikube
 
@@ -103,6 +106,9 @@ python3 ./testings/mqtt_test.py
 
 
 ## Kafka UI (Optional)  
+
+![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/982a44ea-7d7d-422c-bf92-ff146db79c45)
+
 
 ```bash
 helm repo add kafka-ui https://provectus.github.io/kafka-ui-charts
