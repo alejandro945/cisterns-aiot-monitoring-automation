@@ -22,18 +22,87 @@ Desarrollar y validar un sistema tele-informático que permita automatizar el pr
 
 ## Deployment
 
+1. Install Minikube
 
-### Kafka
+2. Starting Minikube
 
 ```bash
-minikube start --memory 8192 --cpus 2
-kubectl create namespace kafka
-kubectl create -f 'https://strimzi.io/install/latest?namespace=kafka' -n kafka
-kubectl apply -f https://strimzi.io/examples/latest/kafka/kafka-persistent-single.yaml -n kafka 
-kubectl wait kafka/my-cluster --for=condition=Ready --timeout=300s -n kafka 
+minikube start --memory 4096
 ```
 
-### UI
+3. Creation of namespaces
+
+```bash
+kubectl create namespace kafka
+kubectl create namespace monitoring
+```
+
+4. Deploy Strimzi Kafka Operator (including ClusterRole, ClusterRoleBinding and CRDs):
+
+```bash
+kubectl create -f 'https://strimzi.io/install/latest?namespace=kafka' -n kafka
+```
+
+5. Deploy Prometheus Operator (including ClusterRole, ClusterRoleBinding and CRDs):
+
+```bash
+kubectl apply -f ./monitoring/prometheus/prometheus-operator-deployment.yaml -n monitoring --force-conflicts=true --server-side
+```
+
+6. Create configmap for jmx metrics:
+
+```bash
+kubectl apply -f ./message-broker/kafka-metrics-config.yaml -n kafka
+kubectl apply -f ./message-broker/zookeeper-metrics-config.yaml -n kafka
+```
+
+7. Add our custom kafka resource and wait for it to be ready:
+
+```bash
+kubectl apply -f ./message-broker/kafka.yaml -n kafka
+kubectl wait kafka/my-cluster --for=condition=Ready --timeout=300s -n kafka
+```
+
+8. Deploy Prometheus
+
+```bash
+kubectl apply -f ./monitoring/prometheus/prometheus.yaml -n monitoring
+```
+
+9. Deploy Pod monitor
+
+```bash
+kubectl apply -f ./monitoring/strimzi-pod-monitor.yaml -n monitoring
+```
+
+10. Deploy grafana
+
+```bash
+kubectl apply -f ./monitoring/grafana/grafana.yaml -n monitoring
+```
+
+11. Create a topic:
+
+```bash
+kubectl apply -f message-broker/topic.yaml -n kafka
+```
+
+12. Add Prometheus datasource in Grafana 10 Upload grafana dashboards from- https://github.com/strimzi/strimzi-kafka-operator/tree/0.28.0/examples/metrics/grafana-dashboards
+
+13. Create mqtt bridge
+
+```bash
+kubectl apply -f ./mqtt-broker -n kafka
+```
+
+14. Test our mqtt bridge
+
+```bash
+python3 ./testings/mqtt_test.py
+```
+
+
+## Kafka UI (Optional)  
 
 ```bash
 helm repo add kafka-ui https://provectus.github.io/kafka-ui-charts
