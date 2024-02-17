@@ -104,6 +104,13 @@ kubectl apply -f ./mqtt-broker -n kafka
 python3 ./testings/mqtt_test.py
 ```
 
+15. Port forward to grafana and prometheus
+
+```bash
+kubectl port-forward svc/grafana 3000:3000 -n monitoring
+kubectl port-forward svc/prometheus-operated 9090:9090 -n monitoring
+```
+
 
 ## Kafka UI (Optional)  
 
