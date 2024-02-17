@@ -27,7 +27,7 @@ Desarrollar y validar un sistema tele-informático que permita automatizar el pr
 2. Starting Minikube
 
 ```bash
-minikube start --memory 4096
+minikube start --memory 8192
 ```
 
 3. Creation of namespaces
