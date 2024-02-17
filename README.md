@@ -18,7 +18,7 @@ Desarrollar y validar un sistema tele-informático que permita automatizar el pr
    
 ## Infrastructure
 
-![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/4a1050bc-38bc-4e78-bf12-6830f6fd9cca)
+![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/98a30ab7-05fc-4088-a8c4-79cdf3a7663b)
 
 ## IOT 4 Layers
 ![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/bafb3114-074f-4920-a3dd-135c4032a9c8)
@@ -110,6 +110,8 @@ python3 ./testings/mqtt_test.py
 kubectl port-forward svc/grafana 3000:3000 -n monitoring
 kubectl port-forward svc/prometheus-operated 9090:9090 -n monitoring
 ```
+
+![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/923625b2-8f12-4b90-8249-9f3ddc197c40)
 
 
 ## Kafka UI (Optional)  
