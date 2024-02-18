@@ -1,0 +1,23 @@
+apiVersion: kafka.strimzi.io/v1beta2
+
+kind: KafkaConnector
+
+metadata:
+  name: connector-mongodb-sink
+  labels:
+    strimzi.io/cluster: mongodb-sink-connect-cluster
+
+spec:
+  class: com.mongodb.kafka.connect.MongoSinkConnector
+  tasksMax: 1
+  config:
+    topics: samples
+    key.converter: org.apache.kafka.connect.storage.StringConverter
+    value.converter: org.apache.kafka.connect.json.JsonConverter
+    value.converter.schemas.enable: false
+    connection.uri: mongodb://mongodb:27017
+    database: sampledb
+    collection: samples
+    transforms: rename
+    transforms.rename.type: "org.apache.kafka.connect.transforms.ReplaceField$Value"
+    transforms.rename.renames: "message:welcome"

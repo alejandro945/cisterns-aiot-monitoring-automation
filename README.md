@@ -21,6 +21,7 @@ Desarrollar y validar un sistema tele-informático que permita automatizar el pr
 ![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/98a30ab7-05fc-4088-a8c4-79cdf3a7663b)
 
 ## IOT 4 Layers
+
 ![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/bafb3114-074f-4920-a3dd-135c4032a9c8)
 
 ## Deployment
@@ -30,7 +31,7 @@ Desarrollar y validar un sistema tele-informático que permita automatizar el pr
 2. Starting Minikube
 
 ```bash
-minikube start --memory 8192
+minikube start --memory 6144
 ```
 
 3. Creation of namespaces
@@ -38,6 +39,7 @@ minikube start --memory 8192
 ```bash
 kubectl create namespace kafka
 kubectl create namespace monitoring
+kubectl create namespace apps
 ```
 
 4. Deploy Strimzi Kafka Operator (including ClusterRole, ClusterRoleBinding and CRDs):
@@ -90,21 +92,39 @@ kubectl apply -f ./monitoring/grafana/grafana.yaml -n monitoring
 kubectl apply -f message-broker/topic.yaml -n kafka
 ```
 
-12. Add Prometheus datasource in Grafana 10 Upload grafana dashboards from- https://github.com/strimzi/strimzi-kafka-operator/tree/0.28.0/examples/metrics/grafana-dashboards
+12. Add Prometheus datasource in Grafana and Upload grafana dashboards from- ./dashboard
 
-13. Create mqtt bridge
+13. Deploy mongo database with its mongo express web ui
+
+```bash
+kubectl apply -f ./storage/mongo.yaml -n apps
+```
+
+14. Create mqtt bridge
 
 ```bash
 kubectl apply -f ./mqtt-broker -n kafka
 ```
 
-14. Test our mqtt bridge
+15. Create the kafka mongo connect
+
+```bash
+kubectl apply -f ./message-broker/kafka-mongo-connect.yaml -n kafka
+```
+
+16. Create the kafka mongo sink
+
+```bash
+kubectl apply -f ./message-broker/kafka-mongo-sink.yaml -n kafka
+```
+
+17. Test our mqtt bridge
 
 ```bash
 python3 ./testings/mqtt_test.py
 ```
 
-15. Port forward to grafana and prometheus
+18. Port forward to grafana and prometheus
 
 ```bash
 kubectl port-forward svc/grafana 3000:3000 -n monitoring
@@ -131,6 +151,9 @@ helm install kafka-ui kafka-ui/kafka-ui \
 
 ```bash
 kubectl delete -f ./message-broker/kafka.yaml -n kafka
+kubectl -n kafka delete -f ./message-broker/kafka-mongo-connect.yaml
+kubectl -n kafka delete -f ./message-broker/kafka-mongo-sink.yaml
+kubectl -n kafka delete -f ./message-broker/topic.yaml
 kubectl -n monitoring delete -f ./monitoring/prometheus/prometheus.yaml
 kubectl -n monitoring delete -f ./monitoring/strimzi-pod-monitor.yaml
 kubectl -n monitoring delete -f ./monitoring/grafana/grafana.yaml
@@ -138,8 +161,11 @@ kubectl -n kafka delete -f 'https://strimzi.io/install/latest?namespace=kafka'
 kubectl -n kafka delete -f ./monitoring/prometheus/prometheus-operator-deployment.yaml -n monitoring
 kubectl -n kafka delete -f ./message-broker/kafka-metrics-config.yaml
 kubectl -n kafka delete -f ./message-broker/zookeeper-metrics-config.yaml
+kubectl -n apps delete -f ./storage/mongo.yaml
+kubectl -n kafka delete -f ./mqtt-broker
 kubectl delete namespace kafka
 kubectl delete namespace monitoring
+kubectl delete namespace apps
 # helm uninstall kafka-ui -n kafka
 minikube stop
 ```
