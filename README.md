@@ -15,6 +15,11 @@ Desarrollar y validar un sistema tele-informático que permita automatizar el pr
 2.	Proponer una arquitectura que permita escalar el sistema AIoT en todo el campus de la Universidad Icesi. 
 3.	Implementar una infraestructura de comunicación y almacenamiento de datos para la medición de los nodos de AIoT.
 4.	Desarrollar un módulo de reportes, alertas y descarga de datos basados en el consumo de agua de los aljibes.
+
+## Network
+
+![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/2c91a78c-d6a5-484d-98fc-8612759c8e56)
+
    
 ## Infrastructure
 
