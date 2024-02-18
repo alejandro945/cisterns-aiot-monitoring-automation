@@ -18,8 +18,7 @@ Desarrollar y validar un sistema tele-informático que permita automatizar el pr
 
 ## Network
 
-![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/2c91a78c-d6a5-484d-98fc-8612759c8e56)
-
+![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/c042898c-d217-49f8-9a2a-9563917825fd)
    
 ## Infrastructure
 
