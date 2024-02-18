@@ -30,122 +30,124 @@ Desarrollar y validar un sistema tele-informático que permita automatizar el pr
 
 2. Starting Minikube
 
-```bash
-minikube start --memory 6144
-```
+   ```bash
+   minikube start --memory 6144
+   ```
 
 3. Creation of namespaces
 
-```bash
-kubectl create namespace kafka
-kubectl create namespace monitoring
-kubectl create namespace apps
-```
+   ```bash
+   kubectl create namespace kafka
+   kubectl create namespace monitoring
+   kubectl create namespace apps
+   ```
 
 4. Deploy Strimzi Kafka Operator (including ClusterRole, ClusterRoleBinding and CRDs):
 
-```bash
-kubectl create -f 'https://strimzi.io/install/latest?namespace=kafka' -n kafka
-```
+   ```bash
+   kubectl create -f 'https://strimzi.io/install/latest?namespace=kafka' -n kafka
+   ```
 
 5. Deploy Prometheus Operator (including ClusterRole, ClusterRoleBinding and CRDs):
 
-```bash
-kubectl apply -f ./monitoring/prometheus/prometheus-operator-deployment.yaml -n monitoring --force-conflicts=true --server-side
-```
+   ```bash
+   kubectl apply -f ./monitoring/prometheus/prometheus-operator-deployment.yaml -n monitoring --force-conflicts=true --server-side
+   ```
 
 6. Create configmap for jmx metrics:
 
-```bash
-kubectl apply -f ./message-broker/kafka-metrics-config.yaml -n kafka
-kubectl apply -f ./message-broker/zookeeper-metrics-config.yaml -n kafka
-```
+   ```bash
+   kubectl apply -f ./message-broker/kafka-metrics-config.yaml -n kafka
+   kubectl apply -f ./message-broker/zookeeper-metrics-config.yaml -n kafka
+   ```
 
 7. Add our custom kafka resource and wait for it to be ready:
 
-```bash
-kubectl apply -f ./message-broker/kafka.yaml -n kafka
-kubectl wait kafka/my-cluster --for=condition=Ready --timeout=300s -n kafka
-```
+   ```bash
+   kubectl apply -f ./message-broker/kafka.yaml -n kafka
+   kubectl wait kafka/my-cluster --for=condition=Ready --timeout=300s -n kafka
+   ```
 
 8. Deploy Prometheus
 
-```bash
-kubectl apply -f ./monitoring/prometheus/prometheus.yaml -n monitoring
-```
+   ```bash
+   kubectl apply -f ./monitoring/prometheus/prometheus.yaml -n monitoring
+   ```
 
 9. Deploy Pod monitor
 
-```bash
-kubectl apply -f ./monitoring/strimzi-pod-monitor.yaml -n monitoring
-```
+   ```bash
+   kubectl apply -f ./monitoring/strimzi-pod-monitor.yaml -n monitoring
+   ```
 
 10. Deploy grafana Enter in grafana app port forwarding 3000 to 3000 and the add prometheus datasource with the url http://   prometheus-operated:9090 and also add dashboards from the folder ./dashboard (Exporter and kafka)
 
-```bash
-kubectl apply -f ./monitoring/grafana/grafana.yaml -n monitoring
-```
+   ```bash
+   kubectl apply -f ./monitoring/grafana/grafana.yaml -n monitoring
+   ```
    
 11. Create a topic:
 
-```bash
-kubectl apply -f message-broker/topic.yaml -n kafka
-```
+   ```bash
+   kubectl apply -f message-broker/topic.yaml -n kafka
+   ```
 
-12. Add Prometheus datasource in Grafana and Upload grafana dashboards from- ./dashboard
+12. Deploy mongo database with its mongo express web ui
 
-13. Deploy mongo database with its mongo express web ui
+   ```bash
+   kubectl apply -f ./storage/mongo.yaml -n apps
+   ```
 
-```bash
-kubectl apply -f ./storage/mongo.yaml -n apps
-```
+13. Create the kafka mongo connect
 
-14. Create the kafka mongo connect
+   ```bash
+   kubectl apply -f ./message-broker/kafka-mongo-connect.yaml -n kafka
+   ```
 
-```bash
-kubectl apply -f ./message-broker/kafka-mongo-connect.yaml -n kafka
-```
+14. Create the kafka mongo sink
 
-15. Create the kafka mongo sink
+   ```bash
+   kubectl apply -f ./message-broker/kafka-mongo-sink.yaml -n kafka
+   ```
 
-```bash
-kubectl apply -f ./message-broker/kafka-mongo-sink.yaml -n kafka
-```
+15. Create mqtt bridge
 
-16. Create mqtt bridge
+   ```bash
+   kubectl apply -f ./mqtt-broker -n kafka
+   ```
 
-```bash
-kubectl apply -f ./mqtt-broker -n kafka
-```
+16. Test our mqtt bridge
 
-17. Test our mqtt bridge
+   ```bash
+   python3 ./testing/mqtt_test.py
+   ```
 
-```bash
-python3 ./testing/mqtt_test.py
-```
+17. Port forward to grafana and prometheus
 
-18. Port forward to grafana and prometheus
-
-```bash
-kubectl port-forward svc/grafana 3000:3000 -n monitoring
-kubectl port-forward svc/prometheus-operated 9090:9090 -n monitoring
-```
+   ```bash
+   kubectl port-forward svc/grafana 3000:3000 -n monitoring
+   kubectl port-forward svc/prometheus-operated 9090:9090 -n monitoring
+   ```
 
 ![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/923625b2-8f12-4b90-8249-9f3ddc197c40)
 
+18. Kafka UI
 
-## Kafka UI (Optional)  
+   ```bash
+   helm repo add kafka-ui https://provectus.github.io/kafka-ui-charts
+   helm install kafka-ui kafka-ui/kafka-ui \
+      --set envs.config.KAFKA_CLUSTERS_0_NAME=local \
+      --set envs.config.KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=my-cluster-kafka-bootstrap:9092 \
+      --namespace kafka
+   ```
 
 ![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/982a44ea-7d7d-422c-bf92-ff146db79c45)
 
+19. Enable Metrics k8s api
 
-```bash
-helm repo add kafka-ui https://provectus.github.io/kafka-ui-charts
-helm install kafka-ui kafka-ui/kafka-ui \
-   --set envs.config.KAFKA_CLUSTERS_0_NAME=local \
-   --set envs.config.KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=my-cluster-kafka-bootstrap:9092 \
-   --namespace kafka
-```
+   ```bash
+   minikube addons enable metrics-server
+   ```
 
 ## Delete resources
 
