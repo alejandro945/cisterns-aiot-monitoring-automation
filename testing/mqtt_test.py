@@ -2,7 +2,7 @@
 
 import random
 import time
-
+import json
 from paho.mqtt import client as mqtt_client
 
 
@@ -32,8 +32,12 @@ def publish(client):
     msg_count = 1
     while True:
         time.sleep(1)
-        msg = f"messages: {msg_count}"
-        result = client.publish(topic, msg)
+         # Create a dictionary with the message content
+        msg = {"message": msg_count}
+        # Convert the dictionary to a JSON-formatted string
+        msg_json = json.dumps(msg)
+        # Publish the JSON-formatted message to the topic
+        result = client.publish(topic, msg_json)
         # result: [0, 1]
         status = result[0]
         if status == 0:

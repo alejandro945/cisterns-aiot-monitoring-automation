@@ -18,11 +18,11 @@ data:
   topic-mapping-rules.json: '[
     {
       "mqttTopic": "sensors/([^/]+)/data",
-      "kafkaTopic": "sensor_data"
+      "kafkaTopic": "measurements"
     },
     {
       "mqttTopic": "sensors/([^/]+)/status",
-      "kafkaTopic": "sensor_status"
+      "kafkaTopic": "measurements_status"
     }
   ]'
   log4j2.properties: |

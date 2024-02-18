@@ -80,12 +80,12 @@ kubectl apply -f ./monitoring/prometheus/prometheus.yaml -n monitoring
 kubectl apply -f ./monitoring/strimzi-pod-monitor.yaml -n monitoring
 ```
 
-10. Deploy grafana
+10. Deploy grafana Enter in grafana app port forwarding 3000 to 3000 and the add prometheus datasource with the url http://   prometheus-operated:9090 and also add dashboards from the folder ./dashboard (Exporter and kafka)
 
 ```bash
 kubectl apply -f ./monitoring/grafana/grafana.yaml -n monitoring
 ```
-
+   
 11. Create a topic:
 
 ```bash
@@ -100,28 +100,28 @@ kubectl apply -f message-broker/topic.yaml -n kafka
 kubectl apply -f ./storage/mongo.yaml -n apps
 ```
 
-14. Create mqtt bridge
-
-```bash
-kubectl apply -f ./mqtt-broker -n kafka
-```
-
-15. Create the kafka mongo connect
+14. Create the kafka mongo connect
 
 ```bash
 kubectl apply -f ./message-broker/kafka-mongo-connect.yaml -n kafka
 ```
 
-16. Create the kafka mongo sink
+15. Create the kafka mongo sink
 
 ```bash
 kubectl apply -f ./message-broker/kafka-mongo-sink.yaml -n kafka
 ```
 
+16. Create mqtt bridge
+
+```bash
+kubectl apply -f ./mqtt-broker -n kafka
+```
+
 17. Test our mqtt bridge
 
 ```bash
-python3 ./testings/mqtt_test.py
+python3 ./testing/mqtt_test.py
 ```
 
 18. Port forward to grafana and prometheus
@@ -166,6 +166,6 @@ kubectl -n kafka delete -f ./mqtt-broker
 kubectl delete namespace kafka
 kubectl delete namespace monitoring
 kubectl delete namespace apps
-# helm uninstall kafka-ui -n kafka
+helm uninstall kafka-ui -n kafka
 minikube stop
 ```

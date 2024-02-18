@@ -1,31 +1,35 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mongo
+  name: mongodb-deployment
   namespace: apps
+  labels:
+    app: mongodb
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: mongo
+      app: mongodb
   template:
     metadata:
       labels:
-        app: mongo
+        app: mongodb
     spec:
       containers:
-        - name: mongo
-          image: bitnami/mongodb:13.6.0
+        - name: mongodb
+          image: mongo
           ports:
           - containerPort: 27017
           env:
-          - name: MONGODB_ROOT_PASSWORD
-            value: "admin"
+          - name: MONGO_INITDB_ROOT_USERNAME
+            value: admin
+          - name: MONGO_INITDB_ROOT_PASSWORD
+            value: admin
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: mongodb
+  name: mongodb-service
 spec:
   selector:
     app: mongodb
@@ -39,6 +43,8 @@ kind: Deployment
 metadata:
   name: mongo-express
   namespace: apps
+  labels:
+    app: mongo-express
 spec:
   replicas: 1
   selector:
@@ -55,13 +61,21 @@ spec:
           ports:
             - containerPort: 8081
           env:
+          - name: ME_CONFIG_MONGODB_ADMINUSERNAME
+            value: admin
+          - name: ME_CONFIG_MONGODB_ADMINPASSWORD
+            value: admin
           - name: ME_CONFIG_MONGODB_SERVER
-            value: mongodb://mongodb:27017
+            value: mongodb-service
+          - name: ME_CONFIG_BASICAUTH_USERNAME
+            value: admin
+          - name: ME_CONFIG_BASICAUTH_PASSWORD
+            value: admin
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: mongo-express
+  name: mongo-express-service
 spec:
   selector:
     app: mongo-express

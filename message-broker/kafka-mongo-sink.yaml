@@ -11,13 +11,13 @@ spec:
   class: com.mongodb.kafka.connect.MongoSinkConnector
   tasksMax: 1
   config:
-    topics: samples
-    key.converter: org.apache.kafka.connect.storage.StringConverter
-    value.converter: org.apache.kafka.connect.json.JsonConverter
-    value.converter.schemas.enable: false
-    connection.uri: mongodb://mongodb:27017
-    database: sampledb
-    collection: samples
-    transforms: rename
-    transforms.rename.type: "org.apache.kafka.connect.transforms.ReplaceField$Value"
-    transforms.rename.renames: "message:welcome"
+    topics: measurements
+    #key.converter: org.apache.kafka.connect.storage.StringConverter
+    #value.converter: org.apache.kafka.connect.json.JsonConverter
+    #value.converter.schemas.enable: false
+    connection.uri: mongodb://admin:admin@mongodb-service.apps.svc.cluster.local:27017
+    database: cisterns
+    collection: measurements
+    #transforms: rename
+    #transforms.rename.type: "org.apache.kafka.connect.transforms.ReplaceField$Value"
+    #transforms.rename.renames: "message:welcome"
