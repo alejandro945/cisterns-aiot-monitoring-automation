@@ -18,8 +18,8 @@ Desarrollar y validar un sistema tele-informático que permita automatizar el pr
 
 ## Network
 
-![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/c042898c-d217-49f8-9a2a-9563917825fd)
-   
+![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/958833a7-a837-4566-ac1c-b672182429cf)
+
 ## Infrastructure
 
 ![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/98a30ab7-05fc-4088-a8c4-79cdf3a7663b)
@@ -27,6 +27,10 @@ Desarrollar y validar un sistema tele-informático que permita automatizar el pr
 ## IOT 4 Layers
 
 ![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/bafb3114-074f-4920-a3dd-135c4032a9c8)
+
+## AIoT Flow
+
+![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/e3648dcb-5626-46dc-ba64-f4e11a88f9d2)
 
 ## Deployment
 
