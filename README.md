@@ -148,10 +148,11 @@ Desarrollar y validar un sistema tele-informático que permita automatizar el pr
 ## Delete resources
 
 ```bash
-kubectl delete -f ./message-broker/kafka.yaml -n kafka
+kubectl -n kafka delete -f ./message-broker/kafka.yaml 
 kubectl -n kafka delete -f ./message-broker/kafka-mongo-connect.yaml
 kubectl -n kafka delete -f ./message-broker/kafka-mongo-sink.yaml
 kubectl -n kafka delete -f ./message-broker/topic.yaml
+kubectl -n kafka delete -f ./mqtt-broker
 kubectl -n monitoring delete -f ./monitoring/prometheus/prometheus.yaml
 kubectl -n monitoring delete -f ./monitoring/strimzi-pod-monitor.yaml
 kubectl -n monitoring delete -f ./monitoring/grafana/grafana.yaml
@@ -160,7 +161,6 @@ kubectl -n kafka delete -f ./monitoring/prometheus/prometheus-operator-deploymen
 kubectl -n kafka delete -f ./message-broker/kafka-metrics-config.yaml
 kubectl -n kafka delete -f ./message-broker/zookeeper-metrics-config.yaml
 kubectl -n apps delete -f ./storage/mongo.yaml
-kubectl -n kafka delete -f ./mqtt-broker
 kubectl delete namespace kafka
 kubectl delete namespace monitoring
 kubectl delete namespace apps
