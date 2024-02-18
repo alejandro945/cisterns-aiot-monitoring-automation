@@ -80,7 +80,8 @@ Desarrollar y validar un sistema tele-informático que permita automatizar el pr
    kubectl apply -f ./monitoring/strimzi-pod-monitor.yaml -n monitoring
    ```
 
-10. Deploy grafana Enter in grafana app port forwarding 3000 to 3000 and the add prometheus datasource with the url http://   prometheus-operated:9090 and also add dashboards from the folder ./dashboard (Exporter and kafka)
+10. Deploy grafana Enter in grafana app port forwarding 3000 to 3000 and the add prometheus datasource 
+   with the url http://prometheus-operated:9090 and also add dashboards from the folder ./dashboard (Exporter and kafka)
 
    ```bash
    kubectl apply -f ./monitoring/grafana/grafana.yaml -n monitoring
