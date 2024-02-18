@@ -80,8 +80,7 @@ Desarrollar y validar un sistema tele-informático que permita automatizar el pr
    kubectl apply -f ./monitoring/strimzi-pod-monitor.yaml -n monitoring
    ```
 
-10. Deploy grafana Enter in grafana app port forwarding 3000 to 3000 and the add prometheus datasource 
-   with the url http://prometheus-operated:9090 and also add dashboards from the folder ./dashboard (Exporter and kafka)
+10. Deploy grafana Enter in grafana app port forwarding 3000 to 3000 and the add prometheus datasource with the url http://prometheus-operated:9090 and also add dashboards from the folder ./dashboard (Exporter and kafka)
 
    ```bash
    kubectl apply -f ./monitoring/grafana/grafana.yaml -n monitoring
@@ -130,8 +129,6 @@ Desarrollar y validar un sistema tele-informático que permita automatizar el pr
    kubectl port-forward svc/prometheus-operated 9090:9090 -n monitoring
    ```
 
-![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/923625b2-8f12-4b90-8249-9f3ddc197c40)
-
 18. Kafka UI
 
    ```bash
@@ -141,8 +138,6 @@ Desarrollar y validar un sistema tele-informático que permita automatizar el pr
       --set envs.config.KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=my-cluster-kafka-bootstrap:9092 \
       --namespace kafka
    ```
-
-![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/982a44ea-7d7d-422c-bf92-ff146db79c45)
 
 19. Enable Metrics k8s api
 
@@ -172,3 +167,9 @@ kubectl delete namespace apps
 helm uninstall kafka-ui -n kafka
 minikube stop
 ```
+## Flow Evidences
+
+![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/875467a5-07b6-4b37-a28b-b3b8beeed1cd)
+![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/6691b1df-5350-435e-8151-76a826c2e02b)
+![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/c2c32bf1-123f-458b-9b10-bdc4ddc0a93a)
+![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/92321704-8eda-4b66-8ab3-671b05eb2a79)
