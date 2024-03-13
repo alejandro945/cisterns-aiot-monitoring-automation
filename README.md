@@ -15,7 +15,11 @@ Desarrollar y validar un sistema tele-informático que permita automatizar el pr
 2.	Proponer una arquitectura que permita escalar el sistema AIoT en todo el campus de la Universidad Icesi. 
 3.	Implementar una infraestructura de comunicación y almacenamiento de datos para la medición de los nodos de AIoT.
 4.	Desarrollar un módulo de reportes, alertas y descarga de datos basados en el consumo de agua de los aljibes.
-   
+
+## Network
+
+![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/958833a7-a837-4566-ac1c-b672182429cf)
+
 ## Infrastructure
 
 ![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/98a30ab7-05fc-4088-a8c4-79cdf3a7663b)
@@ -23,6 +27,31 @@ Desarrollar y validar un sistema tele-informático que permita automatizar el pr
 ## IOT 4 Layers
 
 ![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/bafb3114-074f-4920-a3dd-135c4032a9c8)
+
+## AIoT Flow
+
+![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/e3648dcb-5626-46dc-ba64-f4e11a88f9d2)
+
+## C4 Model
+
+![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/e98e3dfa-f71c-48e9-ab02-6d3f4a462a6a)
+
+## ESP32 Cam
+
+![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/5014ac3a-5558-46ac-a5a9-13633e492415)
+
+## MQTT Broker
+
+![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/f3da130a-82f2-45a4-bcf6-5134d6ed98d5)
+
+## Event Store Broker
+
+![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/d8137b3a-d70e-4d9f-9025-dc60e9ac5715)
+
+## Web App
+
+![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/ab9fb40e-9884-439c-be6f-50b4fb0dd4b9)
+
 
 ## Deployment
 
