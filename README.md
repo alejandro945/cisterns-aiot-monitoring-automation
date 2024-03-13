@@ -134,7 +134,7 @@ Desarrollar y validar un sistema tele-informático que permita automatizar el pr
    ```bash
    helm repo add kafka-ui https://provectus.github.io/kafka-ui-charts
    helm install kafka-ui kafka-ui/kafka-ui \
-      --set envs.config.KAFKA_CLUSTERS_0_NAME=local \
+      --set envs.config.KAFKA_CLUSTERS_0_NAME=my-cluster \
       --set envs.config.KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=my-cluster-kafka-bootstrap:9092 \
       --namespace kafka
    ```
@@ -157,14 +157,14 @@ kubectl -n monitoring delete -f ./monitoring/prometheus/prometheus.yaml
 kubectl -n monitoring delete -f ./monitoring/strimzi-pod-monitor.yaml
 kubectl -n monitoring delete -f ./monitoring/grafana/grafana.yaml
 kubectl -n kafka delete -f 'https://strimzi.io/install/latest?namespace=kafka'
-kubectl -n kafka delete -f ./monitoring/prometheus/prometheus-operator-deployment.yaml -n monitoring
+kubectl -n monitoring delete -f ./monitoring/prometheus/prometheus-operator-deployment.yaml 
 kubectl -n kafka delete -f ./message-broker/kafka-metrics-config.yaml
 kubectl -n kafka delete -f ./message-broker/zookeeper-metrics-config.yaml
 kubectl -n apps delete -f ./storage/mongo.yaml
+helm uninstall kafka-ui -n kafka
 kubectl delete namespace kafka
 kubectl delete namespace monitoring
 kubectl delete namespace apps
-helm uninstall kafka-ui -n kafka
 minikube stop
 ```
 ## Flow Evidences

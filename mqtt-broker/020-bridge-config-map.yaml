@@ -21,8 +21,12 @@ data:
       "kafkaTopic": "measurements"
     },
     {
-      "mqttTopic": "sensors/([^/]+)/status",
-      "kafkaTopic": "measurements_status"
+      "mqttTopic": "sensors/main/raw",
+      "kafkaTopic": "measurements_raw"
+    },
+    {
+      "mqttTopic": "sensors/main/json",
+      "kafkaTopic": "measurements_json"
     }
   ]'
   log4j2.properties: |

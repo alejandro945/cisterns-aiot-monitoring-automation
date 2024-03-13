@@ -7,3 +7,23 @@ metadata:
 spec:
   partitions: 1
   replicas: 1
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: measurement-raw
+  labels:
+    strimzi.io/cluster: "my-cluster"
+spec:
+  partitions: 1
+  replicas: 1
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: measurement-json
+  labels:
+    strimzi.io/cluster: "my-cluster"
+spec:
+  partitions: 1
+  replicas: 1
