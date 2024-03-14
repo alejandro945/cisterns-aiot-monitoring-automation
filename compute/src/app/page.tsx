@@ -1,4 +1,4 @@
-import { AUTH_PAGE } from "@/constants/auth";
+import { AUTH_PAGE } from "@/constants/auth.constants";
 import { AuthForm } from "@/containers/AuthForm";
 import Link from "next/link";
 
