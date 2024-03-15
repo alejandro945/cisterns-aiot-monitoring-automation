@@ -28,3 +28,12 @@ export const MENU = [
     }
 ]
 
+
+export const NAVBAR = {
+    select:{
+        placeholder: "Select a team",
+        search: "Search team...",
+        empty: "Aljibe no encontrado."
+    },
+}
+

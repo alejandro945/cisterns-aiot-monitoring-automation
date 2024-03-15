@@ -3,7 +3,7 @@ import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { MENU } from "@/constants/menu.constants"
 
-export function MainNav({
+export function MenuOptions({
   className,
   ...props
 }: React.HTMLAttributes<HTMLElement>) {

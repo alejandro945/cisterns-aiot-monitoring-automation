@@ -1,19 +1,26 @@
 import { Overview } from '@/components/common/bar'
 import { CalendarDateRangePicker } from '@/components/common/data-range-picker'
+import CisternsSelect from '@/components/layout/select'
+import { ComboboxDemo } from '@/components/layout/test'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { DASHBOARD_PAGE } from '@/constants/dash.constants'
+import { CisternService } from '@/services/cisterns-service'
 import React from 'react'
 
-const DashboardPage = () => {
+const DashboardPage = async () => {
+    const groups = await CisternService.getCisterns()
+
     return (
-        <div className="flex-1 space-y-4 p-8 pt-6">
-            <div className="flex items-center justify-between space-y-2">
+        <div className="flex-1 space-y-4 p-2 sm:p-8 pt-6">
+            {/* Title And Filters */}
+            <div className="flex flex-col items-center justify-between space-y-2 md:flex-row">
                 <h2 className="text-3xl font-bold tracking-tight">{DASHBOARD_PAGE.title}</h2>
-                <div className="flex items-center space-x-2">
+                <div className="flex flex-col w-full items-center justify-center gap-2 sm:flex-row md:justify-end">
+                    <CisternsSelect groups={groups} />
                     <CalendarDateRangePicker />
-                    <Button>{DASHBOARD_PAGE.filter}</Button>
+                    <Button className='w-full sm:w-auto'>{DASHBOARD_PAGE.filter}</Button>
                 </div>
             </div>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -119,8 +126,8 @@ const DashboardPage = () => {
                     </CardContent>
                 </Card>
             </div>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-                <Card className="col-span-4">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-8" >
+                <Card className="lg:col-span-5">
                     <CardHeader>
                         <CardTitle>Consumo Anual</CardTitle>
                     </CardHeader>
@@ -128,7 +135,7 @@ const DashboardPage = () => {
                         <Overview />
                     </CardContent>
                 </Card>
-                <Card className="col-span-3">
+                <Card className="lg:col-span-3">
                     <CardHeader>
                         <CardTitle>Recent Sales</CardTitle>
                         <CardDescription>

@@ -1,0 +1,1 @@
+export type SelectGroup = {label: string, value: string}
