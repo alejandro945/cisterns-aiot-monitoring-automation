@@ -1,5 +1,5 @@
 import { AUTH_PAGE } from "@/constants/auth.constants";
-import { AuthForm } from "@/containers/AuthForm";
+import AuthWrapper from "@/containers/auth/AuthWrapper";
 import Link from "next/link";
 
 export default function Home() {
@@ -45,18 +45,8 @@ export default function Home() {
         <div className="lg:p-8">
           <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[100%]">
             
-            {/* Title and Description */}
-            <div className="flex flex-col space-y-2 text-center">
-              <h1 className="text-2xl font-semibold tracking-tight">
-                {AUTH_PAGE.right.title}
-              </h1>
-              <p className="text-sm text-muted-foreground">
-                {AUTH_PAGE.right.subtitle}
-              </p>
-            </div>
-
-            {/* Auth Form */}
-            <AuthForm />
+            {/* Auth Panel */}
+            <AuthWrapper />
 
             {/* Footer */}
             <p className="px-8 text-center text-sm text-muted-foreground">
@@ -73,8 +63,7 @@ export default function Home() {
                 className="underline underline-offset-4 hover:text-primary"
               >
                 {AUTH_PAGE.right.termsAndPolicies.split(" ")[2]}
-              </Link>
-              .
+              </Link>.
             </p>
             
           </div>

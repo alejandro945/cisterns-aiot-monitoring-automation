@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { Icons } from '@/components/ui/icons'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '../ui/command'
 import { cn } from '@/lib/utils'
-import { SelectGroup } from '@/types/CisternsGroups'
+import { SelectGroup } from '@/dto/in/CisternsGroups'
 import { NAVBAR } from '@/constants/menu.constants'
 import { Check, ChevronsUpDown } from 'lucide-react'
 

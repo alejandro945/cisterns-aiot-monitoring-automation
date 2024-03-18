@@ -5,16 +5,13 @@ import { METADATA } from "@/constants/metadata.constants"
 import { Metadata } from "next"
 import React from "react"
 
-
 export const metadata: Metadata = METADATA.dashboard
-
 
 export default async function DashboardLayout({
     children, // will be a page or nested layout
 }: {
     children: React.ReactNode
 }) {
-
     return (
         <section className="flex w-full justify-center">
             {/* Main Dash Layout */}

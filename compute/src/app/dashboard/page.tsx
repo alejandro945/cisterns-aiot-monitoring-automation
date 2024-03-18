@@ -1,7 +1,6 @@
 import { Overview } from '@/components/common/bar'
 import { CalendarDateRangePicker } from '@/components/common/data-range-picker'
-import CisternsSelect from '@/components/layout/select'
-import { ComboboxDemo } from '@/components/layout/test'
+import CisternsSelect from '@/components/common/select'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'

@@ -1,4 +1,4 @@
-import { SelectGroup } from "@/types/CisternsGroups"
+import { SelectGroup } from "@/dto/in/CisternsGroups"
 
 
 export const CisternService = {
