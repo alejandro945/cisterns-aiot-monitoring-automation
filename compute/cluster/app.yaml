@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cistern-app
+  namespace: apps
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: cistern-app
+  template:
+    metadata:
+      labels:
+        app: cistern-app
+    spec:
+      containers:
+      - name: cistern-app
+        image: alejandro945/cistern-app:latest
+        ports:
+        - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cistern-service
+  namespace: apps
+spec:
+  selector:
+    app: cistern-app
+  ports:
+  - name: http
+    port: 80
+    targetPort: 3000

@@ -177,16 +177,21 @@ Desarrollar y validar un sistema tele-informático que permita automatizar el pr
 20. Accesing to cluster single point (Security). Install ingress controller (nginx)
 
    ```bash
-   helm upgrade --install ingress-nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx --namespace ingress-nginx --create-namespace
-      #Check the pods
-   kubectl get pods --namespace ingress-nginx
+   minikube addons enable ingress
+      # For cloud providers
+      # helm upgrade --install ingress-nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx #--namespace ingress-nginx --create-namespace
    ```
 
 21. Set up the ingress to route traffic to the following services (Mqtt broker Bridge)
    
       ```bash
       kubectl apply -f ./ingress/ingress-configmap.yaml -n ingress-nginx
-      kubectl apply -f ./ingress/main.yaml -n ingress-nginx
+      kubectl apply -f ./ingress/ingress-app-rules.yaml -n apps
+      # Add the port to nginx service (Edit yaml)
+         #- name: mqtt
+         #   port: 1883
+         #   protocol: TCP
+         #   targetPort: 1883
       ```   
 
 ## Delete resources
@@ -205,10 +210,14 @@ kubectl -n monitoring delete -f ./monitoring/prometheus/prometheus-operator-depl
 kubectl -n kafka delete -f ./message-broker/kafka-metrics-config.yaml
 kubectl -n kafka delete -f ./message-broker/zookeeper-metrics-config.yaml
 kubectl -n apps delete -f ./storage/mongo.yaml
+kubectl -n apps delete -f ./ingress/ingress-app-rules.yaml
+kubectl -n ingress-nginx delete -f ./ingress/ingress-configmap.yaml
 helm uninstall kafka-ui -n kafka
 kubectl delete namespace kafka
 kubectl delete namespace monitoring
 kubectl delete namespace apps
+minikube addons disable metrics-server
+minikube addons disable ingress
 minikube stop
 ```
 ## Flow Evidences

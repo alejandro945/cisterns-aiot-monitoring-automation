@@ -17,6 +17,9 @@ spec:
     spec:
       containers:
         - name: mongodb
+          volumeMounts:
+            - mountPath: /data/db
+              name: mo-data
           image: mongo
           ports:
           - containerPort: 27017
@@ -25,6 +28,11 @@ spec:
             value: admin
           - name: MONGO_INITDB_ROOT_PASSWORD
             value: admin
+      volumes:
+        - name: mo-data
+          persistentVolumeClaim:
+            claimName: mo-data-pvc
+      restartPolicy: Always
 ---
 apiVersion: v1
 kind: Service

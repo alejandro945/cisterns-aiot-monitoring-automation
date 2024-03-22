@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mo-data-pv
+  namespace: apps
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 1000Mi
+  hostPath:
+    path: /data/standard/default/mo-data-pv
+    type: ""
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: standard
+  volumeMode: Filesystem
