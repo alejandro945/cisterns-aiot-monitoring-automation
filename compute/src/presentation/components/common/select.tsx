@@ -3,15 +3,12 @@ import React from 'react'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { Button } from '../ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
-import { Icons } from '@/presentation/components/ui/icons'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '../ui/command'
 import { cn } from '@/presentation/lib/utils'
-import { SelectGroup } from '@/domain/dto/in/CisternsGroups'
 import { NAVBAR } from '@/presentation/constants/menu.constants'
 import { Check, ChevronsUpDown } from 'lucide-react'
 
-
-const CisternsSelect: React.FC<{ groups: SelectGroup[] }> = ({ groups }) => {
+const CisternsSelect: React.FC<{ groups: any[] }> = ({ groups }) => {
     const [open, setOpen] = React.useState(false)
     const [selectedTeam, setSelectedTeam] = React.useState(groups[0])
     return (
