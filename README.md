@@ -174,6 +174,21 @@ Desarrollar y validar un sistema tele-informático que permita automatizar el pr
    minikube addons enable metrics-server
    ```
 
+20. Accesing to cluster single point (Security). Install ingress controller (nginx)
+
+   ```bash
+   helm upgrade --install ingress-nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx --namespace ingress-nginx --create-namespace
+      #Check the pods
+   kubectl get pods --namespace ingress-nginx
+   ```
+
+21. Set up the ingress to route traffic to the following services (Mqtt broker Bridge)
+   
+      ```bash
+      kubectl apply -f ./ingress/ingress-configmap.yaml -n ingress-nginx
+      kubectl apply -f ./ingress/main.yaml -n ingress-nginx
+      ```   
+
 ## Delete resources
 
 ```bash
