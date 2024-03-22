@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  deploy:
+  ci:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -20,6 +20,18 @@ jobs:
 
       - name: Run Lint
         run: npm run lint
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          # list of Docker images to use as base name for tags
+          images: |
+            ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}        
+          # generate Docker tags based on the following events/attributes
+          tags: |
+            type=schedule
+            type=sha  
 
       - name: Setup QEMU
         uses: docker/setup-qemu-action@v3
@@ -38,4 +50,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:${{ steps.vars.outputs.tag }}, ${{ secrets.DOCKER_HUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO }}:latest
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
