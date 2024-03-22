@@ -30,9 +30,8 @@ jobs:
             ${{ vars.DOCKER_HUB_USERNAME }}/${{ vars.DOCKERHUB_REPO }}        
           # generate Docker tags based on the following events/attributes
           tags: |
-            type=schedule
+            type=ref,event=branch
             type=sha 
-            latest=true 
 
       - name: Setup QEMU
         uses: docker/setup-qemu-action@v3
