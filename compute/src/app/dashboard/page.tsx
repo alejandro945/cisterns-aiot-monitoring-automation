@@ -1,15 +1,12 @@
-import { Overview } from '@/components/common/bar'
-import { CalendarDateRangePicker } from '@/components/common/data-range-picker'
-import CisternsSelect from '@/components/common/select'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { DASHBOARD_PAGE } from '@/constants/dash.constants'
-import { CisternService } from '@/services/cisterns-service'
+import { Overview } from '@/presentation/components/common/bar'
+import { CalendarDateRangePicker } from '@/presentation/components/common/data-range-picker'
+import { Avatar, AvatarFallback, AvatarImage } from '@/presentation/components/ui/avatar'
+import { Button } from '@/presentation/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/presentation/components/ui/card'
+import { DASHBOARD_PAGE } from '@/presentation/constants/dash.constants'
 import React from 'react'
 
 const DashboardPage = async () => {
-    const groups = await CisternService.getCisterns()
 
     return (
         <div className="flex-1 space-y-4 p-2 sm:p-8 pt-6">
@@ -17,7 +14,7 @@ const DashboardPage = async () => {
             <div className="flex flex-col items-center justify-between space-y-2 md:flex-row">
                 <h2 className="text-3xl font-bold tracking-tight">{DASHBOARD_PAGE.title}</h2>
                 <div className="flex flex-col w-full items-center justify-center gap-2 sm:flex-row md:justify-end">
-                    <CisternsSelect groups={groups} />
+                    {/* <CisternsSelect groups={groups} /> */}
                     <CalendarDateRangePicker />
                     <Button className='w-full sm:w-auto'>{DASHBOARD_PAGE.filter}</Button>
                 </div>

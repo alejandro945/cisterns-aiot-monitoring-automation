@@ -1,7 +1,7 @@
-import { MenuOptions } from "@/components/layout/main-nav"
-import { UserNav } from "@/components/layout/user-nav"
-import { Input } from "@/components/ui/input"
-import { METADATA } from "@/constants/metadata.constants"
+import { MenuOptions } from "@/presentation/components/layout/main-nav"
+import { UserNav } from "@/presentation/components/layout/user-nav"
+import { Input } from "@/presentation/components/ui/input"
+import { METADATA } from "@/presentation/constants/metadata.constants"
 import { Metadata } from "next"
 import React from "react"
 

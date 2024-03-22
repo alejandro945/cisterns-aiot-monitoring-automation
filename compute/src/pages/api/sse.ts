@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { changeStream } from '@/db/mongo-client'
+import { changeStream } from '@/infrastructure/database/mongo-client.database'
 
 // setupChangeStream()
 
