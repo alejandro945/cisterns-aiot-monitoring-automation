@@ -4,7 +4,7 @@ metadata:
   name: cistern-app
   namespace: apps
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: cistern-app
@@ -15,9 +15,11 @@ spec:
     spec:
       containers:
       - name: cistern-app
-        image: alejandro945/cistern-app:latest
+        image: alejandro945/app-cisterns:latest
         ports:
         - containerPort: 3000
+        env:
+          MONGO_URI: "mongodb://admin:admin@mongodb-service:27017/cisterns"
 ---
 apiVersion: v1
 kind: Service

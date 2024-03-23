@@ -145,20 +145,26 @@ Desarrollar y validar un sistema tele-informático que permita automatizar el pr
    kubectl apply -f ./mqtt-broker -n kafka
    ```
 
-16. Test our mqtt bridge
+16. Create app
+
+   ```bash
+   kubectl apply -f ./compute/cluster/app.yaml -n apps
+   ```
+
+17. Test our mqtt bridge
 
    ```bash
    python3 ./testing/mqtt_test.py
    ```
 
-17. Port forward to grafana and prometheus
+18. Port forward to grafana and prometheus
 
    ```bash
    kubectl port-forward svc/grafana 3000:3000 -n monitoring
    kubectl port-forward svc/prometheus-operated 9090:9090 -n monitoring
    ```
 
-18. Kafka UI
+19. Kafka UI
 
    ```bash
    helm repo add kafka-ui https://provectus.github.io/kafka-ui-charts
@@ -168,13 +174,13 @@ Desarrollar y validar un sistema tele-informático que permita automatizar el pr
       --namespace kafka
    ```
 
-19. Enable Metrics k8s api
+20. Enable Metrics k8s api
 
    ```bash
    minikube addons enable metrics-server
    ```
 
-20. Accesing to cluster single point (Security). Install ingress controller (nginx)
+21. Accesing to cluster single point (Security). Install ingress controller (nginx)
 
    ```bash
    minikube addons enable ingress
@@ -182,7 +188,7 @@ Desarrollar y validar un sistema tele-informático que permita automatizar el pr
       # helm upgrade --install ingress-nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx #--namespace ingress-nginx --create-namespace
    ```
 
-21. Set up the ingress to route traffic to the following services (Mqtt broker Bridge)
+22. Set up the ingress to route traffic to the following services (Mqtt broker Bridge)
    
       ```bash
       kubectl apply -f ./ingress/ingress-configmap.yaml -n ingress-nginx
