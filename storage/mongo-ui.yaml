@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-express
+  namespace: apps
+  labels:
+    app: mongo-express
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo-express
+  template:
+    metadata:
+      labels:
+        app: mongo-express
+    spec:
+      containers:
+        - name: mongo-express
+          image: mongo-express
+          ports:
+            - containerPort: 8081
+          env:
+          - name: ME_CONFIG_MONGODB_ADMINUSERNAME
+            value: userAdmin
+          - name: ME_CONFIG_MONGODB_ADMINPASSWORD
+            value: 3wKIp8IZOYsW0JvH5
+          - name: ME_CONFIG_MONGODB_SERVER
+            value: minimal-cluster-mongos.apps.svc.cluster.local 
+          - name: ME_CONFIG_MONGODB_AUTH_DATABASE
+            value: admin
+          - name: ME_CONFIG_MONGODB_AUTH_USERNAME
+            value: userAdmin
+          - name: ME_CONFIG_MONGODB_AUTH_PASSWORD
+            value: 3wKIp8IZOYsW0JvH5
+          - name: ME_CONFIG_BASICAUTH_USERNAME
+            value: admin
+          - name: ME_CONFIG_BASICAUTH_PASSWORD
+            value: admin
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-express-service
+  namespace: apps
+spec:
+  selector:
+    app: mongo-express
+  ports:
+    - protocol: TCP
+      port: 8081
+      targetPort: 8081

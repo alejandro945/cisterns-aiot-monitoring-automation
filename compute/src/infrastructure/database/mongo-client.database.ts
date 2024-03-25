@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import User from './user-mongo.database'
+import Measurement from './mongo-measurement.database'
 
 const dbConnect = async () => {
   const uri = process.env.MONGO_URI
@@ -9,19 +9,12 @@ const dbConnect = async () => {
   await mongoose.connect(uri)
 }
 
-dbConnect().catch((error) => {
+dbConnect().then(res => console.log(res)).catch((error) => {
   console.error('Error connecting to MongoDB: ', error)
 })
 
 console.log('Setting up change stream')
-const changeStream = User.watch()
+const changeStream = Measurement.watch()
 
-changeStream.on('change', (change) => {
-  console.log('Change: ', change)
-})
-
-changeStream.on('error', (error) => {
-  console.log('Error: ', error)
-})
 
 export { changeStream }

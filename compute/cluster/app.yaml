@@ -19,7 +19,7 @@ spec:
         ports:
         - containerPort: 3000
         env:
-          MONGO_URI: "mongodb://admin:admin@mongodb-service:27017/cisterns"
+          MONGO_URI: "mongodb://userAdmin:3wKIp8IZOYsW0JvH5@minimal-cluster-mongos.apps.svc.cluster.local:27017/cisterns?authSource=admin&ssl=false"
 ---
 apiVersion: v1
 kind: Service

@@ -13,6 +13,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     res.setHeader('Content-Type', 'text/event-stream')
     res.setHeader('Cache-Control', 'no-cache')
     res.setHeader('Connection', 'keep-alive')
+    res.setHeader('Content-Encoding', 'none')
 
     const intervalId = setInterval(() => {
       // Send a heartbeat message to keep the connection alive
@@ -22,11 +23,13 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     // Send real-time updates to the client
     const sendUpdate = (data: { [key: string]: string }) => {
       const event = `data: ${JSON.stringify(data)}\n\n`
-      res.write(event)
+      console.log('Sending event:', event)
+      res.write(`event: message\n${event}`)
     }
 
     changeStream.on('change', (change) => {
       // Notify the client about the change
+      //console.log('Change: ', change)
       sendUpdate(change)
     })
 

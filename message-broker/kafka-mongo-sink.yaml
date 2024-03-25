@@ -15,7 +15,7 @@ spec:
     #key.converter: org.apache.kafka.connect.storage.StringConverter
     #value.converter: org.apache.kafka.connect.json.JsonConverter
     #value.converter.schemas.enable: false
-    connection.uri: mongodb://admin:admin@mongodb-service.apps.svc.cluster.local:27017
+    connection.uri: mongodb://userAdmin:3wKIp8IZOYsW0JvH5@minimal-cluster-mongos.apps.svc.cluster.local:27017
     database: cisterns
     collection: measurements
     #transforms: rename

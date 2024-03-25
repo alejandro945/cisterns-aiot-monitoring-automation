@@ -63,7 +63,19 @@ Desarrollar y validar un sistema tele-informático que permita automatizar el pr
    minikube start --memory 6144
    ```
 
-3. Creation of namespaces
+3. Enable Metrics k8s api
+
+   ```bash
+   minikube addons enable metrics-server
+   ```
+
+4. Install ingress controller (nginx), for accesing to cluster from single point (Security).
+
+   ```bash
+   minikube addons enable ingress
+   ```
+
+5. Creation of namespaces
 
    ```bash
    kubectl create namespace kafka
@@ -71,100 +83,114 @@ Desarrollar y validar un sistema tele-informático que permita automatizar el pr
    kubectl create namespace apps
    ```
 
-4. Deploy Strimzi Kafka Operator (including ClusterRole, ClusterRoleBinding and CRDs):
+6. Set up the ingress to route traffic to the following services (Mqtt broker Bridge and Web App)
+   
+      ```bash
+      kubectl apply -f ./ingress/ingress-configmap.yaml -n ingress-nginx
+      kubectl apply -f ./ingress/ingress-app-rules.yaml -n apps
+      # Add the port to nginx service (Edit yaml) Node Port
+         #- name: mqtt
+         #   port: 1883
+         #   protocol: TCP
+         #   targetPort: 1883
+      ```  
+
+7. Deploy mongo database rs cluster with its mongo express web ui
+
+   ```bash
+   kubectl apply --server-side -f https://raw.githubusercontent.com/percona/percona-server-mongodb-operator/v1.15.0/deploy/bundle.yaml --namespace apps
+   kubectl apply -f ./storage/mongo-crd.yaml --namespace apps
+   kubectl apply -f ./storage/mongo-ui.yaml --namespace apps
+      # Get secrets from sc minimal-cluster
+      # kubectl get secret minimal-cluster -n apps -o jsonpath="{.data['MONGODB_USER_ADMIN_USER']}" | base64 --decode
+      # kubectl get secret minimal-cluster -n apps -o jsonpath="{.data['MONGODB_USER_ADMIN_PASSWORD']}" | base64 --decode
+      # db.grantRolesToUser('userAdmin', [{ role: 'root', db: 'admin' }]) - Grant Roles for mongo-ui
+      # Creation of cisterns db and measurements colleciton from ui
+   ``` 
+
+8. Deploy Strimzi Kafka Operator (including ClusterRole, ClusterRoleBinding and CRDs):
 
    ```bash
    kubectl create -f 'https://strimzi.io/install/latest?namespace=kafka' -n kafka
    ```
 
-5. Deploy Prometheus Operator (including ClusterRole, ClusterRoleBinding and CRDs):
-
-   ```bash
-   kubectl apply -f ./monitoring/prometheus/prometheus-operator-deployment.yaml -n monitoring --force-conflicts=true --server-side
-   ```
-
-6. Create configmap for jmx metrics:
-
-   ```bash
-   kubectl apply -f ./message-broker/kafka-metrics-config.yaml -n kafka
-   kubectl apply -f ./message-broker/zookeeper-metrics-config.yaml -n kafka
-   ```
-
-7. Add our custom kafka resource and wait for it to be ready:
+9. Add our custom kafka resource and wait for it to be ready:
 
    ```bash
    kubectl apply -f ./message-broker/kafka.yaml -n kafka
    kubectl wait kafka/my-cluster --for=condition=Ready --timeout=300s -n kafka
    ```
 
-8. Deploy Prometheus
-
-   ```bash
-   kubectl apply -f ./monitoring/prometheus/prometheus.yaml -n monitoring
-   ```
-
-9. Deploy Pod monitor
-
-   ```bash
-   kubectl apply -f ./monitoring/strimzi-pod-monitor.yaml -n monitoring
-   ```
-
-10. Deploy grafana Enter in grafana app port forwarding 3000 to 3000 and the add prometheus datasource with the url http://prometheus-operated:9090 and also add dashboards from the folder ./dashboard (Exporter and kafka)
-
-   ```bash
-   kubectl apply -f ./monitoring/grafana/grafana.yaml -n monitoring
-   ```
-   
-11. Create a topic:
+10. Topics Creation:
 
    ```bash
    kubectl apply -f message-broker/topic.yaml -n kafka
    ```
 
-12. Deploy mongo database with its mongo express web ui
-
-   ```bash
-   kubectl apply -f ./storage/mongo.yaml -n apps
-   ```
-
-13. Create the kafka mongo connect
+11. Create the kafka mongo connect
 
    ```bash
    kubectl apply -f ./message-broker/kafka-mongo-connect.yaml -n kafka
    ```
 
-14. Create the kafka mongo sink
+12. Create the kafka mongo sink
 
    ```bash
    kubectl apply -f ./message-broker/kafka-mongo-sink.yaml -n kafka
    ```
 
-15. Create mqtt bridge
+13. Create mqtt bridge
 
    ```bash
    kubectl apply -f ./mqtt-broker -n kafka
    ```
 
-16. Create app
+14. Create app
 
    ```bash
    kubectl apply -f ./compute/cluster/app.yaml -n apps
    ```
 
-17. Test our mqtt bridge
+15. Test our mqtt bridge
 
    ```bash
    python3 ./testing/mqtt_test.py
    ```
 
-18. Port forward to grafana and prometheus
+### Monitoring (Optional)
+
+16. Deploy Prometheus Operator (including ClusterRole, ClusterRoleBinding and CRDs):
 
    ```bash
-   kubectl port-forward svc/grafana 3000:3000 -n monitoring
-   kubectl port-forward svc/prometheus-operated 9090:9090 -n monitoring
+   kubectl apply -f ./monitoring/prometheus/prometheus-operator-deployment.yaml -n monitoring --force-conflicts=true --server-side
    ```
 
-19. Kafka UI
+17. Create configmap for jmx metrics:
+
+   ```bash
+   kubectl apply -f ./message-broker/kafka-metrics-config.yaml -n kafka
+   kubectl apply -f ./message-broker/zookeeper-metrics-config.yaml -n kafka
+   ```
+
+18. Deploy Prometheus
+
+   ```bash
+   kubectl apply -f ./monitoring/prometheus/prometheus.yaml -n monitoring
+   ```
+
+19. Deploy Pod monitor
+
+   ```bash
+   kubectl apply -f ./monitoring/strimzi-pod-monitor.yaml -n monitoring
+   ```
+
+20. Deploy grafana Enter in grafana app port forwarding 3000 to 3000 and the add prometheus datasource with the url http://prometheus-operated:9090 and also add dashboards from the folder ./dashboard (Exporter and kafka)
+
+   ```bash
+   kubectl apply -f ./monitoring/grafana/grafana.yaml -n monitoring
+   ```
+
+21. Kafka UI
 
    ```bash
    helm repo add kafka-ui https://provectus.github.io/kafka-ui-charts
@@ -174,58 +200,50 @@ Desarrollar y validar un sistema tele-informático que permita automatizar el pr
       --namespace kafka
    ```
 
-20. Enable Metrics k8s api
+22. Port forward to grafana and prometheus
 
    ```bash
-   minikube addons enable metrics-server
+   kubectl port-forward svc/grafana 3000:3000 -n monitoring
+   kubectl port-forward svc/prometheus-operated 9090:9090 -n monitoring
    ```
-
-21. Accesing to cluster single point (Security). Install ingress controller (nginx)
-
-   ```bash
-   minikube addons enable ingress
-      # For cloud providers
-      # helm upgrade --install ingress-nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx #--namespace ingress-nginx --create-namespace
-   ```
-
-22. Set up the ingress to route traffic to the following services (Mqtt broker Bridge)
-   
-      ```bash
-      kubectl apply -f ./ingress/ingress-configmap.yaml -n ingress-nginx
-      kubectl apply -f ./ingress/ingress-app-rules.yaml -n apps
-      # Add the port to nginx service (Edit yaml)
-         #- name: mqtt
-         #   port: 1883
-         #   protocol: TCP
-         #   targetPort: 1883
-      ```   
 
 ## Delete resources
 
 ```bash
-kubectl -n kafka delete -f ./message-broker/kafka.yaml 
+#App
+kubectl -n apps delete -f ./compute/cluster/app.yaml
+#Broker
+kubectl -n kafka delete -f ./mqtt-broker
+kubectl -n kafka delete -f ./message-broker/topic.yaml
 kubectl -n kafka delete -f ./message-broker/kafka-mongo-connect.yaml
 kubectl -n kafka delete -f ./message-broker/kafka-mongo-sink.yaml
-kubectl -n kafka delete -f ./message-broker/topic.yaml
-kubectl -n kafka delete -f ./mqtt-broker
-kubectl -n monitoring delete -f ./monitoring/prometheus/prometheus.yaml
-kubectl -n monitoring delete -f ./monitoring/strimzi-pod-monitor.yaml
-kubectl -n monitoring delete -f ./monitoring/grafana/grafana.yaml
+kubectl -n kafka delete -f ./message-broker/kafka.yaml 
 kubectl -n kafka delete -f 'https://strimzi.io/install/latest?namespace=kafka'
-kubectl -n monitoring delete -f ./monitoring/prometheus/prometheus-operator-deployment.yaml 
-kubectl -n kafka delete -f ./message-broker/kafka-metrics-config.yaml
-kubectl -n kafka delete -f ./message-broker/zookeeper-metrics-config.yaml
-kubectl -n apps delete -f ./storage/mongo.yaml
+#Storage
+kubectl -n apps delete -f ./storage/mongo-ui.yaml
+kubectl -n apps delete -f ./storage/mongo-crd.yaml
+kubectl delete -f https://raw.githubusercontent.com/percona/percona-server-mongodb-operator/v1.15.0/deploy/bundle.yaml --namespace apps
+#Networking
 kubectl -n apps delete -f ./ingress/ingress-app-rules.yaml
 kubectl -n ingress-nginx delete -f ./ingress/ingress-configmap.yaml
-helm uninstall kafka-ui -n kafka
+#Isolation
 kubectl delete namespace kafka
 kubectl delete namespace monitoring
 kubectl delete namespace apps
-minikube addons disable metrics-server
+#Minikube
 minikube addons disable ingress
+minikube addons disable metrics-server
 minikube stop
+# Monitoring
+helm uninstall kafka-ui -n kafka
+kubectl -n monitoring delete -f ./monitoring/grafana/grafana.yaml
+kubectl -n monitoring delete -f ./monitoring/strimzi-pod-monitor.yaml
+kubectl -n monitoring delete -f ./monitoring/prometheus/prometheus.yaml
+kubectl -n kafka delete -f ./message-broker/kafka-metrics-config.yaml
+kubectl -n kafka delete -f ./message-broker/zookeeper-metrics-config.yaml
+kubectl -n monitoring delete -f ./monitoring/prometheus/prometheus-operator-deployment.yaml 
 ```
+
 ## Flow Evidences
 
 ![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/875467a5-07b6-4b37-a28b-b3b8beeed1cd)

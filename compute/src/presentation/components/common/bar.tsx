@@ -1,6 +1,8 @@
 "use client"
 
+import { useCallback, useEffect, useState } from "react"
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts"
+import { useToast } from "../ui/use-toast"
 
 const data = [
   {
@@ -54,6 +56,52 @@ const data = [
 ]
 
 export function Overview() {
+  const [sseConnection, setSSEConnection] = useState<EventSource | null>(null)
+  const { toast } = useToast()
+
+  const listenToSSEUpdates = useCallback(() => {
+    console.log('listenToSSEUpdates func')
+    const eventSource = new EventSource('/api/sse')
+
+    eventSource.onopen = () => {
+      console.log('SSE connection opened.')
+      // Save the SSE connection reference in the state
+    }
+
+    eventSource.addEventListener("message", (e) => {
+      const data = JSON.parse(e.data)?.fullDocument
+      toast({
+        title: "New Measurement",
+        description: `Register with id: ${data._id} and value ${data.message}`,
+      })
+    });
+
+/*     eventSource.onmessage = (event) => {
+      const data = event.data
+      console.log('Received SSE Update:', data)
+      //fetchUsers()
+      // Update your UI or do other processing with the received data
+    } */
+
+    eventSource.onerror = (event) => {
+      console.error('SSE Error:', event)
+      // Handle the SSE error here
+    }
+    setSSEConnection(eventSource)
+
+    return eventSource
+  }, [])
+
+  useEffect(() => {
+    listenToSSEUpdates()
+
+    return () => {
+      if (sseConnection) {
+        sseConnection.close()
+      }
+    }
+  }, [listenToSSEUpdates])
+  
   return (
     <ResponsiveContainer width="100%" height={350}>
       <BarChart data={data}>
