@@ -7,7 +7,7 @@ from paho.mqtt import client as mqtt_client
 
 
 broker = '192.168.49.2'
-port = 31945
+port = 32240
 topic = "sensors/measurements/data"
 # Generate a Client ID with the publish prefix.
 client_id = f'publish-{random.randint(0, 1000)}'

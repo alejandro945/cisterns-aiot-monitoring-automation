@@ -21,11 +21,11 @@ data:
       "kafkaTopic": "measurements"
     },
     {
-      "mqttTopic": "sensors/main/raw",
+      "mqttTopic": "sensors/([^/]+)/raw",
       "kafkaTopic": "measurements_raw"
     },
     {
-      "mqttTopic": "sensors/main/json",
+      "mqttTopic": "sensors/([^/]+)/json",
       "kafkaTopic": "measurements_json"
     }
   ]'
