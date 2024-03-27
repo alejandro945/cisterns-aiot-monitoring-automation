@@ -7,13 +7,34 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { AUTH_PAGE } from '@/presentation/constants/auth.constants'
 import { Input } from '@/presentation/components/ui/input'
 import { Button } from '@/presentation/components/ui/button'
+import {signIn} from 'next-auth/react'
+import { useSession } from 'next-auth/react'
+
+const onSubmitForm = async (data: any) => {
+  try {
+    const response = await signIn("credentials", {
+      username: data.email,
+      password: data.password,
+      redirect: true,
+      callbackUrl: "/dashboard",
+    })
+
+    console.log("Respuesta de inicio de sesión:", response)
+    
+  } catch (error) {
+    console.error("Error al iniciar sesión:", error);
+  }
+};
 
 const SignInForm = () => {
   const form = useForm<AuthFormValues>({ resolver: zodResolver(AuthSchema) })
+  const {data: session, status} = useSession();
+  console.log("status", status);
+  console.log("session user", session?.user?.name);
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(() => {})} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmitForm)} className="space-y-8">
         <FormField
           control={form.control}
           name="email"

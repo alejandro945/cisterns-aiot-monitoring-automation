@@ -40,6 +40,6 @@ export default async function handler(
     // Aquí te dejo un ejemplo simple utilizando el paquete jsonwebtoken
     const jwt = require('jsonwebtoken');
     const secret = process.env.NEXTAUTH_SECRET; // Debes reemplazarlo con tu propia clave secreta
-    const token = jwt.sign({ userId: user._id }, secret, { expiresIn: '5h' }); // Caducidad en 5 horas
+    const token = jwt.sign({ userId: user._id.toString() }, secret, { expiresIn: '5h' }); // Caducidad en 5 horas
     return token;
   }

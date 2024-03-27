@@ -11,7 +11,7 @@ export const MENU = [
     },
     {
         label: 'Salir',
-        link: '/examples/dashboard',
+        link: '/',
         shortcut: '⇧⌘Q'
     },
     {
