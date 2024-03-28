@@ -6,11 +6,11 @@ on:
       - main
 
 jobs:
-  ci:
+  client-ci:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./compute
+        working-directory: ./compute/client
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
