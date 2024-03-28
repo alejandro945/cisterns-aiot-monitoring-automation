@@ -113,9 +113,9 @@ Desarrollar y validar un sistema tele-informático que permita automatizar el pr
       # helm uninstall kubedb --namespace apps
       # kubectl create -f ./storage/mongo-operator.yaml --namespace apps
       # kubectl delete -f ./storage/mongo-operator.yaml --namespace apps
-      # Using local mongo db
-      ./storage/scripts/generate.sh
-      ./storage/scripts/configure.sh admin
+      # Using local mongo db - Move to storage folder
+      ./generate.sh
+      ./configure.sh admin
       kubectl apply -f ./storage/mongo-ui.yaml --namespace apps
       # Creation of cisterns db and measurements colleciton from ui
    ``` 
