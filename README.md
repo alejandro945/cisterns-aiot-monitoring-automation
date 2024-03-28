@@ -52,6 +52,9 @@ Desarrollar y validar un sistema tele-informático que permita automatizar el pr
 
 ![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/ab9fb40e-9884-439c-be6f-50b4fb0dd4b9)
 
+## Resilience
+
+![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/0fb1af51-0def-4fd4-b13e-9a1d4dec5ac1)
 
 ## Deployment
 
