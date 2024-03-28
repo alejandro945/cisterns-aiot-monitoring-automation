@@ -220,6 +220,10 @@ Desarrollar y validar un sistema tele-informático que permita automatizar el pr
    kubectl port-forward svc/prometheus-operated 9090:9090 -n monitoring
    ```
 
+## K9s
+
+![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/e4cd2631-1531-42af-9afc-cb1be4660aaa)
+
 ## Delete resources
 
 ```bash
@@ -256,6 +260,7 @@ kubectl -n kafka delete -f ./message-broker/kafka-metrics-config.yaml
 kubectl -n kafka delete -f ./message-broker/zookeeper-metrics-config.yaml
 kubectl -n monitoring delete -f ./monitoring/prometheus/prometheus-operator-deployment.yaml 
 ```
+
 
 ## Flow Evidences
 
