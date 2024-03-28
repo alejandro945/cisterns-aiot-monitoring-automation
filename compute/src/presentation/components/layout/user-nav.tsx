@@ -16,6 +16,8 @@ import {
 import { Button } from "../ui/button"
 import { MENU } from "@/presentation/constants/menu.constants"
 import Link from "next/link"
+import { Wrapper } from "./layoutDropDownButtons"
+
 
 export function UserNav() {
   return (
@@ -56,12 +58,14 @@ export function UserNav() {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         {/* Log out */}
-        <Link href={MENU[1].link}>
-          <DropdownMenuItem>
-            {MENU[2].label}
-            <DropdownMenuShortcut>{MENU[2].shortcut}</DropdownMenuShortcut>
-          </DropdownMenuItem>
-        </Link>
+        <Wrapper>
+          <Link href={MENU[2].link}>
+            <DropdownMenuItem>
+              {MENU[2].label}
+              <DropdownMenuShortcut>{MENU[2].shortcut}</DropdownMenuShortcut>
+            </DropdownMenuItem>
+          </Link>
+        </Wrapper>
       </DropdownMenuContent>
     </DropdownMenu>
   )

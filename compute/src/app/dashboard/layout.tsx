@@ -4,7 +4,7 @@ import { Input } from "@/presentation/components/ui/input"
 import { METADATA } from "@/presentation/constants/metadata.constants"
 import { Metadata } from "next"
 import React from "react"
-import { Providers } from "../providers"
+
 
 export const metadata: Metadata = METADATA.dashboard
 
@@ -27,9 +27,7 @@ export default async function DashboardLayout({
                         </div>
                     </div>
                 </div>
-                <Providers>
                 {children}
-                </Providers>
             </div>
         </section>
     )
