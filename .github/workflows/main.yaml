@@ -31,11 +31,11 @@ jobs:
             echo $file
             if [[ $file == *"compute/client"* ]]; then
               echo "this modified file is in client directory"
-              echo "::set-output name=run_job::client"
+              echo "run_job=client" >> $GITHUB_OUTPUT
               break
             elif [[ $file == *"compute/server"* ]]; then
               echo "this modified file is in server directory"
-              echo "::set-output name=run_job::server"
+              echo "run_job=server" >> $GITHUB_OUTPUT
               break
             fi
           done < files.txt

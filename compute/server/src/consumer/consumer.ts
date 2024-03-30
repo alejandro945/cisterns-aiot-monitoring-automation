@@ -20,8 +20,8 @@ export class Consumer implements OnModuleInit {
       topic: { topics: deviceTopics },
       config: { groupId: 'server-consumer' },
       onMessage: async (message: KafkaMessage, topic: string) => {
-        const hostname = topic.replace(/\/.+/i, '');
-        const subtopic = topic.replace(/.+\//i, '');
+        const hostname = topic.replace(/-.+/i, '');
+        const subtopic = topic.replace(/.+-/i, '');
         Logger.log(
           `Processing message from ${hostname} in topic ${subtopic} with the value of: ${message.value.toString()}`,
         );

@@ -20,7 +20,7 @@ data:
       "mqttTopic": "device1/IP",
       "kafkaTopic": "device1-ip"
     },
-     {
+    {
       "mqttTopic": "device1/FreeMem",
       "kafkaTopic": "device1-freememory"
     },
@@ -30,7 +30,7 @@ data:
     },
     {
       "mqttTopic": "device1/([^/]+)/json",
-      "kafkaTopic": "device1-json",
+      "kafkaTopic": "device1-json"
     }
   ]'
   log4j2.properties: |

@@ -167,10 +167,11 @@ Desarrollar y validar un sistema tele-informático que permita automatizar el pr
    kubectl apply -f ./mqtt-broker -n kafka
    ```
 
-15. Create web app
+15. Create web tier and app tier
 
    ```bash
-   kubectl apply -f ./compute/cluster/app.yaml -n apps
+   kubectl apply -f ./compute/client/cluster/app.yaml -n apps
+   kubectl apply -f ./compute/server/cluster/app.yaml -n apps
    ```
 
 16. Test our mqtt bridge
@@ -231,7 +232,8 @@ Desarrollar y validar un sistema tele-informático que permita automatizar el pr
 
 ```bash
 #App
-kubectl -n apps delete -f ./compute/cluster/app.yaml
+kubectl -n apps delete -f ./compute/cluster/client/app.yaml
+kubectl -n apps delete -f ./compute/cluster/server/app.yaml
 #Broker
 kubectl -n kafka delete -f ./mqtt-broker
 kubectl -n kafka delete -f ./message-broker/topic.yaml
