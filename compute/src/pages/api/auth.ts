@@ -12,7 +12,6 @@ export default async function handler(
 
   if (req.method === "POST") {
     const { username, password } = req.body;
-    console.log("Api de autenticacion");
     try {
       // Verificar si el usuario existe en la base de datos
       const user = await User.findOne({ email: username });
