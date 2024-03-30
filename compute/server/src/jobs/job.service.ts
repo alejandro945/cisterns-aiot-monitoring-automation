@@ -100,6 +100,11 @@ export class JobsService {
     }
   }
 
+  /**
+   * Function that formats the data from the library api 
+   * @param data - data from the library api
+   * @returns - formatted data in an array of strings
+   */
   private formatDataFromLibrary(data: any): string[] {
     const result = [];
     const splitData = data.split('\r');
