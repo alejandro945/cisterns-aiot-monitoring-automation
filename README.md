@@ -149,13 +149,13 @@ Desarrollar y validar un sistema tele-informático que permita automatizar el pr
    kubectl apply -f message-broker/topic.yaml -n kafka
    ```
 
-12. Create the kafka mongo connect
+12. Create the kafka mongo connect (optional)
 
    ```bash
    kubectl apply -f ./message-broker/kafka-mongo-connect.yaml -n kafka
    ```
 
-13. Create the kafka mongo sink
+13. Create the kafka mongo sink (optional)
 
    ```bash
    kubectl apply -f ./message-broker/kafka-mongo-sink.yaml -n kafka

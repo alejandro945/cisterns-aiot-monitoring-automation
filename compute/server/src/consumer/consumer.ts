@@ -15,7 +15,7 @@ export class Consumer implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
-    const deviceTopics: RegExp[] = [/^device1\/.+/i, /^device2\/.+/i]; //Change this to the real devices hostname or main mqtt topic
+    const deviceTopics: RegExp[] = [/^device1-.+/i, /^device2-.+/i]; //Change this to the real devices hostname or main mqtt topic
     await this.consumerService.consume({
       topic: { topics: deviceTopics },
       config: { groupId: 'server-consumer' },

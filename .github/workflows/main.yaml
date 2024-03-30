@@ -6,7 +6,41 @@ on:
       - main
 
 jobs:
+  check-files-changes:
+    name: Check files changes
+    outputs:
+      run_job: ${{ steps.check_files_changes.outputs.run_job }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check files changes
+        id: check_files_changes
+        run: |
+          echo "=============== list modified files ==============="
+          git diff --name-only HEAD^ HEAD
+
+          echo "========== check paths of modified files =========="
+          git diff --name-only HEAD^ HEAD &gt; files.txt
+
+          while IFS= read -r file
+          do
+            echo $file
+            if [[ $file == *"compute/client"* ]]; then
+              echo "this modified file is in client directory"
+              echo "::set-output name=run_job::client"
+              break
+            elif [[ $file == *"compute/server"* ]]; then
+              echo "this modified file is in server directory"
+              echo "::set-output name=run_job::server"
+              break
+            fi
+          done &lt; files.txt
+
   client-ci:
+    needs: check-files-changes
+    if: ${{ needs.check-files-changes.outputs.run_job == 'client' }}
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -56,6 +90,8 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
   server-ci:
+    needs: check-files-changes
+    if: ${{ needs.check-files-changes.outputs.run_job == 'server' }}
     runs-on: ubuntu-latest
     defaults:
       run:
