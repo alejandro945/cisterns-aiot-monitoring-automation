@@ -29,6 +29,5 @@ RUN npm install
 
 COPY --from=Core-Service-Development /usr/src/app/dist ./dist
 COPY --from=Core-Service-Development /usr/src/app/package.json .
-COPY --from=Core-Service-Development /usr/src/app/.env .
 
 CMD [ "node", "dist/main" ]
