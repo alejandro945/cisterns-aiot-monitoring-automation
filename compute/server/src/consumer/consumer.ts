@@ -100,7 +100,7 @@ export class Consumer implements OnModuleInit {
         //Just insert the measurment in the database if the previous value is not the same or is greater
         const lastValue = await this.databaseSerive
           .getDbHandle()
-          .collection('measurments')
+          .collection('measurements')
           .findOne(
             {
               hostname,
@@ -110,7 +110,7 @@ export class Consumer implements OnModuleInit {
         if (!lastValue || lastValue.value <= json.value) {
           this.databaseSerive
             .getDbHandle()
-            .collection('measurments')
+            .collection('measurements')
             .insertOne({
               hostname,
               value: json.value,
@@ -124,13 +124,13 @@ export class Consumer implements OnModuleInit {
         //Get the first value registered on this day in the measurments colleciton base on the hostname and created at date
         const firstValueOfTheDay = await this.databaseSerive
           .getDbHandle()
-          .collection('measurments')
+          .collection('measurements')
           .findOne({
             hostname,
             createdAt: { $gte: new Date().setHours(0, 0, 0, 0) },
           });
         // Create an alert if the difference between the first value of the day and the last value is greater than MAX_CONSUMPTION
-        const diff = json.value - firstValueOfTheDay.value;
+        const diff = json?.value - (firstValueOfTheDay?.value || json?.value);
         if (diff > maxConsumption) {
           this.databaseSerive
             .getDbHandle()
