@@ -21,12 +21,20 @@ data:
       "kafkaTopic": "measurements"
     },
     {
-      "mqttTopic": "sensors/([^/]+)/raw",
-      "kafkaTopic": "measurements_raw"
+      "mqttTopic": "device1/IP",
+      "kafkaTopic": "device1/IP"
+    },
+     {
+      "mqttTopic": "device1/FreeMem",
+      "kafkaTopic": "device1/FREEMEMORY"
     },
     {
-      "mqttTopic": "sensors/([^/]+)/json",
-      "kafkaTopic": "measurements_json"
+      "mqttTopic": "device1/wifiRSSI",
+      "kafkaTopic": "device1/WIFIRSSI"
+    },
+    {
+      "mqttTopic": "device1/([^/]+)/json",
+      "kafkaTopic": "device1/JSON"
     }
   ]'
   log4j2.properties: |

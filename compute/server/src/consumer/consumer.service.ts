@@ -8,7 +8,7 @@ import { DatabaseService } from '@/storage/storage.service';
 interface KafkajsConsumerOptions {
   topic: ConsumerSubscribeTopics;
   config: ConsumerConfig;
-  onMessage: (message: KafkaMessage) => Promise<void>;
+  onMessage: (message: KafkaMessage, topic: string) => Promise<void>;
 }
 
 @Injectable()
@@ -18,7 +18,7 @@ export class ConsumerService implements OnApplicationShutdown {
   constructor(
     private readonly configService: ConfigService,
     private readonly databaserService: DatabaseService,
-  ) {}
+  ) { }
 
   async consume({ topic, config, onMessage }: KafkajsConsumerOptions) {
     const consumer = new KafkajsConsumer(
