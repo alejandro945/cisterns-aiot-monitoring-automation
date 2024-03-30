@@ -13,4 +13,4 @@ import { DatabaseModule } from '@/storage/storage.module';
   ],
   providers: [JobsService],
 })
-export class JobsModule { }
+export class JobsModule {}

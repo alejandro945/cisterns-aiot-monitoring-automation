@@ -18,7 +18,7 @@ export class ConsumerService implements OnApplicationShutdown {
   constructor(
     private readonly configService: ConfigService,
     private readonly databaserService: DatabaseService,
-  ) { }
+  ) {}
 
   async consume({ topic, config, onMessage }: KafkajsConsumerOptions) {
     const consumer = new KafkajsConsumer(

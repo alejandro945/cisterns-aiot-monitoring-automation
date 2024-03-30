@@ -8,4 +8,4 @@ import { Consumer } from './consumer';
   providers: [ConsumerService, Consumer],
   exports: [ConsumerService, Consumer],
 })
-export class ConsumerModule { }
+export class ConsumerModule {}

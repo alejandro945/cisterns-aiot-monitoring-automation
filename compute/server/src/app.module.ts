@@ -14,4 +14,4 @@ import { JobsModule } from './jobs/job.module';
     DatabaseModule,
   ],
 })
-export class AppModule { }
+export class AppModule {}
