@@ -24,7 +24,7 @@ jobs:
           git diff --name-only HEAD^ HEAD
 
           echo "========== check paths of modified files =========="
-          git diff --name-only HEAD^ HEAD &gt; files.txt
+          git diff --name-only HEAD^ HEAD > files.txt
 
           while IFS= read -r file
           do
@@ -38,7 +38,7 @@ jobs:
               echo "::set-output name=run_job::server"
               break
             fi
-          done &lt; files.txt
+          done < files.txt
 
   client-ci:
     needs: check-files-changes
