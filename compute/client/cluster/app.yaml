@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cistern-app
+  namespace: apps
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cistern-app
+  template:
+    metadata:
+      labels:
+        app: cistern-app
+    spec:
+      containers:
+      - name: cistern-app
+        image: alejandro945/app-cisterns:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: MONGO_URI
+          value: mongodb://main_admin:admin@mongodb-service.apps.svc.cluster.local:27017/cisterns?authSource=admin&ssl=false
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cistern-service
+  namespace: apps
+spec:
+  selector:
+    app: cistern-app
+  ports:
+  - name: http
+    port: 80
+    targetPort: 3000

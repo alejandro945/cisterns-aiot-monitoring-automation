@@ -52,6 +52,9 @@ Desarrollar y validar un sistema tele-informático que permita automatizar el pr
 
 ![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/ab9fb40e-9884-439c-be6f-50b4fb0dd4b9)
 
+## Resilience
+
+![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/1599d096-d91b-4f22-8a7a-c92dab01c5cb)
 
 ## Deployment
 
@@ -98,78 +101,92 @@ Desarrollar y validar un sistema tele-informático que permita automatizar el pr
 7. Deploy mongo database rs cluster with its mongo express web ui
 
    ```bash
-   kubectl apply --server-side -f https://raw.githubusercontent.com/percona/percona-server-mongodb-operator/v1.15.0/deploy/bundle.yaml --namespace apps
-   kubectl apply -f ./storage/mongo-crd.yaml --namespace apps
-   kubectl apply -f ./storage/mongo-ui.yaml --namespace apps
-      # Get secrets from sc minimal-cluster
-      # kubectl get secret minimal-cluster -n apps -o jsonpath="{.data['MONGODB_USER_ADMIN_USER']}" | base64 --decode
-      # kubectl get secret minimal-cluster -n apps -o jsonpath="{.data['MONGODB_USER_ADMIN_PASSWORD']}" | base64 --decode
-      # db.grantRolesToUser('userAdmin', [{ role: 'root', db: 'admin' }]) - Grant Roles for mongo-ui
+      # Using Percona Server for MongoDB Operator
+      # kubectl apply --server-side -f https://raw.githubusercontent.com/percona/percona-server-mongodb-operator/v1.15.0/deploy/bundle.yaml --namespace apps
+      # Using helm bitnami chart
+      # helm upgrade --install mongodb -f ./storage/mongo-values.yaml oci://registry-1.docker.io/bitnamicharts/mongodb --namespace apps
+      # kubectl apply -f ./storage/mongo-crd.yaml --namespace apps
+      # helm uninstall mongodb --namespace apps
+      # Using kubedb operator (https://appscode.com/issue-license/) Ask for a license txt free
+      # helm install kubedb oci://ghcr.io/appscode-charts/kubedb \
+      # --version v2023.12.11 \
+      # --namespace apps --create-namespace \
+      # --set-file global.license=./license/kubedb.txt \
+      # --wait --burst-limit=10000 --debug
+      # helm uninstall kubedb --namespace apps
+      # kubectl create -f ./storage/mongo-operator.yaml --namespace apps
+      # kubectl delete -f ./storage/mongo-operator.yaml --namespace apps
+      # Using local mongo db - Move to storage folder
+      ./generate.sh
+      ./configure.sh admin
+      kubectl apply -f ./storage/mongo-ui.yaml --namespace apps
       # Creation of cisterns db and measurements colleciton from ui
    ``` 
 
-8. Deploy Strimzi Kafka Operator (including ClusterRole, ClusterRoleBinding and CRDs):
+8. Create configmap for jmx metrics:
+
+   ```bash
+   kubectl apply -f ./message-broker/kafka-metrics-config.yaml -n kafka
+   kubectl apply -f ./message-broker/zookeeper-metrics-config.yaml -n kafka
+   ```
+
+9. Deploy Strimzi Kafka Operator (including ClusterRole, ClusterRoleBinding and CRDs):
 
    ```bash
    kubectl create -f 'https://strimzi.io/install/latest?namespace=kafka' -n kafka
    ```
 
-9. Add our custom kafka resource and wait for it to be ready:
+10. Add our custom kafka resource and wait for it to be ready:
 
    ```bash
    kubectl apply -f ./message-broker/kafka.yaml -n kafka
    kubectl wait kafka/my-cluster --for=condition=Ready --timeout=300s -n kafka
    ```
 
-10. Topics Creation:
+11. Topics Creation:
 
    ```bash
    kubectl apply -f message-broker/topic.yaml -n kafka
    ```
 
-11. Create the kafka mongo connect
+12. Create the kafka mongo connect (optional)
 
    ```bash
    kubectl apply -f ./message-broker/kafka-mongo-connect.yaml -n kafka
    ```
 
-12. Create the kafka mongo sink
+13. Create the kafka mongo sink (optional)
 
    ```bash
    kubectl apply -f ./message-broker/kafka-mongo-sink.yaml -n kafka
    ```
 
-13. Create mqtt bridge
+14. Create mqtt bridge
 
    ```bash
    kubectl apply -f ./mqtt-broker -n kafka
    ```
 
-14. Create app
+15. Create web tier and app tier
 
    ```bash
-   kubectl apply -f ./compute/cluster/app.yaml -n apps
+   kubectl apply -f ./compute/client/cluster/app.yaml -n apps
+   kubectl apply -f ./compute/server/cluster/app.yaml -n apps
    ```
 
-15. Test our mqtt bridge
+16. Test our mqtt bridge
 
    ```bash
+      # pip install paho-mqtt
    python3 ./testing/mqtt_test.py
    ```
 
 ### Monitoring (Optional)
 
-16. Deploy Prometheus Operator (including ClusterRole, ClusterRoleBinding and CRDs):
+17. Deploy Prometheus Operator (including ClusterRole, ClusterRoleBinding and CRDs):
 
    ```bash
    kubectl apply -f ./monitoring/prometheus/prometheus-operator-deployment.yaml -n monitoring --force-conflicts=true --server-side
-   ```
-
-17. Create configmap for jmx metrics:
-
-   ```bash
-   kubectl apply -f ./message-broker/kafka-metrics-config.yaml -n kafka
-   kubectl apply -f ./message-broker/zookeeper-metrics-config.yaml -n kafka
    ```
 
 18. Deploy Prometheus
@@ -207,11 +224,16 @@ Desarrollar y validar un sistema tele-informático que permita automatizar el pr
    kubectl port-forward svc/prometheus-operated 9090:9090 -n monitoring
    ```
 
+## K9s
+
+![image](https://github.com/alejandro945/cisterns-aiot-monitoring-automation/assets/64285906/e4cd2631-1531-42af-9afc-cb1be4660aaa)
+
 ## Delete resources
 
 ```bash
 #App
-kubectl -n apps delete -f ./compute/cluster/app.yaml
+kubectl -n apps delete -f ./compute/cluster/client/app.yaml
+kubectl -n apps delete -f ./compute/cluster/server/app.yaml
 #Broker
 kubectl -n kafka delete -f ./mqtt-broker
 kubectl -n kafka delete -f ./message-broker/topic.yaml
@@ -221,7 +243,7 @@ kubectl -n kafka delete -f ./message-broker/kafka.yaml
 kubectl -n kafka delete -f 'https://strimzi.io/install/latest?namespace=kafka'
 #Storage
 kubectl -n apps delete -f ./storage/mongo-ui.yaml
-kubectl -n apps delete -f ./storage/mongo-crd.yaml
+kubectl -n apps delete -f ./storage/mongo.yaml
 kubectl delete -f https://raw.githubusercontent.com/percona/percona-server-mongodb-operator/v1.15.0/deploy/bundle.yaml --namespace apps
 #Networking
 kubectl -n apps delete -f ./ingress/ingress-app-rules.yaml
@@ -243,6 +265,7 @@ kubectl -n kafka delete -f ./message-broker/kafka-metrics-config.yaml
 kubectl -n kafka delete -f ./message-broker/zookeeper-metrics-config.yaml
 kubectl -n monitoring delete -f ./monitoring/prometheus/prometheus-operator-deployment.yaml 
 ```
+
 
 ## Flow Evidences
 

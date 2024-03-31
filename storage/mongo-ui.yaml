@@ -22,17 +22,17 @@ spec:
             - containerPort: 8081
           env:
           - name: ME_CONFIG_MONGODB_ADMINUSERNAME
-            value: userAdmin
+            value: main_admin
           - name: ME_CONFIG_MONGODB_ADMINPASSWORD
-            value: 3wKIp8IZOYsW0JvH5
+            value: admin
           - name: ME_CONFIG_MONGODB_SERVER
-            value: minimal-cluster-mongos.apps.svc.cluster.local 
+            value: mongodb-service.apps.svc.cluster.local 
           - name: ME_CONFIG_MONGODB_AUTH_DATABASE
             value: admin
           - name: ME_CONFIG_MONGODB_AUTH_USERNAME
-            value: userAdmin
+            value: main_admin
           - name: ME_CONFIG_MONGODB_AUTH_PASSWORD
-            value: 3wKIp8IZOYsW0JvH5
+            value: admin
           - name: ME_CONFIG_BASICAUTH_USERNAME
             value: admin
           - name: ME_CONFIG_BASICAUTH_PASSWORD
