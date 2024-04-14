@@ -18,8 +18,6 @@ const onSubmitForm = async (data: any) => {
       redirect: true,
       callbackUrl: "/dashboard",
     })
-
-    console.log("Respuesta de inicio de sesión:", response)
     
   } catch (error) {
     console.error("Error al iniciar sesión:", error);
@@ -30,7 +28,6 @@ const SignInForm = () => {
   const form = useForm<AuthFormValues>({ resolver: zodResolver(AuthSchema) })
   const {data: session, status} = useSession();
   console.log("status", status);
-  console.log("session user", session?.user?.name);
 
   return (
     <Form {...form}>

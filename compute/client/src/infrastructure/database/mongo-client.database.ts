@@ -21,9 +21,11 @@ const dbConnect = async (): Promise<void> => {
   // Use new database connection
   const db = await mongoose.connect(uri);
   connection.isConnected = db.connections[0].readyState;
+  console.log(connection.isConnected)
+  console.log(db.connections[0].readyState)
 }
 
-dbConnect().then(() => console.log('Connected to MongoDB')).catch((error) => {
+dbConnect().then(() => console.log('Already connected to MongoDB')).catch((error) => {
   console.error('Error connecting to MongoDB: ', error)
 })
 
