@@ -17,16 +17,20 @@ data:
     kafka.bootstrap.servers=my-cluster-kafka-bootstrap:9092
   topic-mapping-rules.json: '[
     {
-      "mqttTopic": "sensors/([^/]+)/data",
-      "kafkaTopic": "measurements"
+      "mqttTopic": "device1/IP",
+      "kafkaTopic": "device1-ip"
     },
     {
-      "mqttTopic": "sensors/main/raw",
-      "kafkaTopic": "measurements_raw"
+      "mqttTopic": "device1/FreeMem",
+      "kafkaTopic": "device1-freememory"
     },
     {
-      "mqttTopic": "sensors/main/json",
-      "kafkaTopic": "measurements_json"
+      "mqttTopic": "device1/wifiRSSI",
+      "kafkaTopic": "device1-wifirssi"
+    },
+    {
+      "mqttTopic": "device1/([^/]+)/json",
+      "kafkaTopic": "device1-json"
     }
   ]'
   log4j2.properties: |

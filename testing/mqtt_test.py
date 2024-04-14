@@ -6,9 +6,9 @@ import json
 from paho.mqtt import client as mqtt_client
 
 
-broker = '192.168.49.2'
-port = 31945
-topic = "sensors/measurements/data"
+broker = 'localhost'
+port = 1883
+topic = "device1/wifiRSSI" # main/json, IP, FreeMem, wifiRSSI
 # Generate a Client ID with the publish prefix.
 client_id = f'publish-{random.randint(0, 1000)}'
 # username = 'emqx'
@@ -32,10 +32,16 @@ def publish(client):
     msg_count = 1
     while True:
         time.sleep(1)
-         # Create a dictionary with the message content
-        msg = {"message": msg_count}
+        #Create a dictionary with the message content
+        #msg = { "value": msg_count }
+        #msg = "192.168.130.4"
+        #msg= 150000
+        msg= -30
         # Convert the dictionary to a JSON-formatted string
-        msg_json = json.dumps(msg)
+        #msg_json = json.dumps(msg)
+        #msg_json = "192.168.130.4"
+        #msg_json = 1500
+        msg_json = -80
         # Publish the JSON-formatted message to the topic
         result = client.publish(topic, msg_json)
         # result: [0, 1]
