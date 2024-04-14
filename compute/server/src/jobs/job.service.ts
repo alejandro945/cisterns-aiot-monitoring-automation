@@ -13,7 +13,7 @@ export class JobsService {
   constructor(
     private readonly httpService: HttpService,
     private readonly databaserService: DatabaseService,
-  ) {}
+  ) { }
 
   /**
    * Function that runs every day at midnight
@@ -39,16 +39,16 @@ export class JobsService {
     for (const device of devices) {
       try {
         const response = await firstValueFrom(
-          this.httpService.get(`${device.ip}/value?all=true&type=value`).pipe(
+          this.httpService.get(`${device.ip}/data`).pipe(
             catchError((error: AxiosError) => {
               this.logger.error(error.response.data);
               throw (
                 'ERROR on request to device: ' +
-                  device.hostname +
-                  'with ip' +
-                  device.ip +
-                  ' with error: ' +
-                  error.response.data || 'Unknown error'
+                device.hostname +
+                'with ip' +
+                device.ip +
+                ' with error: ' +
+                error.response.data || 'Unknown error'
               );
             }),
           ),
@@ -57,15 +57,15 @@ export class JobsService {
           //Iterate over all measurements and save them in the database
           const adaptedData = this.formatDataFromLibrary(response.data);
           const bulkOperations = [];
-          const uniqueMeasurements = new Set(adaptedData);
 
-          for (const measurement of uniqueMeasurements) {
+          for (const measurement of adaptedData) {
             bulkOperations.push({
               updateOne: {
                 filter: { value: measurement, hostname: device.hostname },
                 update: {
                   $setOnInsert: {
-                    value: measurement,
+                    value: measurement.value,
+                    timestamp: measurement.date,
                     hostname: device.hostname,
                   },
                 },
@@ -105,26 +105,29 @@ export class JobsService {
    * @param data - data from the library api
    * @returns - formatted data in an array of strings
    */
-  private formatDataFromLibrary(data: any): string[] {
-    const result = [];
-    const splitData = data.split('\r');
+  private formatDataFromLibrary(data: any): Array<{ date: string, value: string }> {
+    const results = [];
+    const splitData = data.split('\n');
     this.logger.log('Split data: ' + splitData);
-    if (splitData.length === 1) {
-      const zero = splitData[0].split('\t');
-      if (zero.length > 1) {
-        result.push(zero[1]);
-      }
-    } else {
-      for (let j = 0; j < splitData.length; j++) {
-        const zero = splitData[j].split('\t');
-        if (zero.length === 1) {
-          result.push(zero[0]);
-        } else {
-          result.push(zero[1]);
+    for (const line of splitData) {
+      // Divide the line into campos
+      const fields = line.split(',');
+      // Verify that the line has the expected number of fields
+      if (fields.length > 2) {
+        // Extract the date (first field)
+        const date = fields[0];
+        // Extraer measurement (third field)
+        const value = fields[2];
+        // Validate value is a number or float
+        if (isNaN(parseFloat(value))) {
+          this.logger.error('Value from data ep cron job is not a number: ' + value);
+          continue;
         }
+        // Add the date and measurement to the results
+        results.push({ date, value });
       }
     }
-    this.logger.log('Result: ' + result);
-    return result;
+    this.logger.log('Result: ' + results);
+    return results;
   }
 }
