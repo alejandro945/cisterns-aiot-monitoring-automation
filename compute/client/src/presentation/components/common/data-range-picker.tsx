@@ -1,26 +1,28 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { addDays, format } from "date-fns"
-import { DateRange } from "react-day-picker"
+import * as React from "react";
+import { addDays, format } from "date-fns";
+import { DateRange } from "react-day-picker";
 
-import { cn } from "@/presentation/lib/utils"
-import { Calendar } from "@/presentation/components/ui/calendar"
+import { cn } from "@/presentation/lib/utils";
+import { Calendar } from "@/presentation/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/presentation/components/ui/popover"
-import { Button } from "../ui/button"
-import { CalendarIcon } from "lucide-react"
+} from "@/presentation/components/ui/popover";
+import { Button } from "../ui/button";
+import { CalendarIcon } from "lucide-react";
+import { useGlobalContext } from "@/context";
 
 export function CalendarDateRangePicker({
   className,
 }: React.HTMLAttributes<HTMLDivElement>) {
   const [date, setDate] = React.useState<DateRange | undefined>({
-    from: new Date(2023, 0, 20),
-    to: addDays(new Date(2023, 0, 20), 20),
-  })
+    from: new Date(),
+    to: undefined,
+  });
+  const { setDateRange } = useGlobalContext();
 
   return (
     <div className={cn("grid gap-2", className)}>
@@ -55,11 +57,16 @@ export function CalendarDateRangePicker({
             mode="range"
             defaultMonth={date?.from}
             selected={date}
-            onSelect={setDate}
+            onSelect={(newDate) => {
+              newDate?.from?.setHours(0, 0, 0, 0);
+              newDate?.to?.setHours(23, 59, 59, 999);
+              setDate(newDate);
+              setDateRange(newDate);
+            }}
             numberOfMonths={2}
           />
         </PopoverContent>
       </Popover>
     </div>
-  )
+  );
 }

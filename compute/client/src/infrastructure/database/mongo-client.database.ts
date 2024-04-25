@@ -1,20 +1,37 @@
-import mongoose from 'mongoose'
-import Measurement from './mongo-measurement.database'
+import mongoose from "mongoose";
+import Measurement from "./mongo-measurement.database";
 
-const dbConnect = async () => {
-  const uri = process.env.MONGO_URI
-  if (!uri) {
-    throw new Error('MONGO_URI is not defined')
-  }
-  await mongoose.connect(uri)
+interface Connection {
+  isConnected?: number;
 }
 
-dbConnect().then(res => console.log(res)).catch((error) => {
-  console.error('Error connecting to MongoDB: ', error)
-})
+const connection: Connection = {};
 
-console.log('Setting up change stream')
-const changeStream = Measurement.watch()
+const dbConnect = async (): Promise<void> => {
+  if (connection.isConnected === 1) {
+    // Use existing database connection
+    return;
+  }
 
+  const uri = process.env.MONGO_URI;
+  if (!uri) {
+    throw new Error("MONGODB_URI is not defined");
+  }
 
-export { changeStream }
+  // Use new database connection
+  const db = await mongoose.connect(uri);
+  connection.isConnected = db.connections[0].readyState;
+  console.log(connection.isConnected);
+  console.log(db.connections[0].readyState);
+};
+
+dbConnect()
+  .then(() => console.log("Already connected to MongoDB"))
+  .catch((error) => {
+    console.error("Error connecting to MongoDB: ", error);
+  });
+
+console.log("Setting up change stream");
+const changeStream = Measurement.watch();
+
+export { changeStream, dbConnect };

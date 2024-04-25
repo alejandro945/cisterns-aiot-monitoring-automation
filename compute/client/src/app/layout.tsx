@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "@/presentation/styles/globals.css";
 import { METADATA } from "@/presentation/constants/metadata.constants";
 import { Toaster } from "@/presentation/components/ui/toaster";
+import { GlobalContextProvider } from "@/context";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,10 +17,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <main>
-          {children}
-        </main>
-        <Toaster />
+        <GlobalContextProvider>
+          <main>{children}</main>
+          <Toaster />
+        </GlobalContextProvider>
       </body>
     </html>
   );

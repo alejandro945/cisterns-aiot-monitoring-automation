@@ -1,82 +1,71 @@
-"use client"
+"use client";
 
-import { useCallback, useEffect, useState } from "react"
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts"
-import { useToast } from "../ui/use-toast"
+import { useCallback, useEffect, useState } from "react";
+import {
+  Bar,
+  BarChart,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+  Tooltip,
+} from "recharts";
+import { useToast } from "../ui/use-toast";
+import { Measurement } from "@/domain/model/Measurement";
+import { useGlobalContext } from "@/context";
+import axios from "axios";
 
-const data = [
-  {
-    name: "Ene",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Feb",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Mar",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Abr",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "May",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Jun",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Jul",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Ago",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Sep",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Oct",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Nov",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Dic",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-]
+interface OverviewProps {
+  doFilter: boolean;
+  setDoFilter: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-export function Overview() {
-  const [sseConnection, setSSEConnection] = useState<EventSource | null>(null)
-  const { toast } = useToast()
+type DataGraph = {
+  name: string;
+  m3: number;
+};
+
+export function Overview({ doFilter, setDoFilter }: OverviewProps) {
+  const [sseConnection, setSSEConnection] = useState<EventSource | null>(null);
+  const [dataGraph, setDataGraph] = useState<DataGraph[]>([]);
+  const { measurements, setMeasurements, dateRange } = useGlobalContext();
+
+  const { toast } = useToast();
 
   const listenToSSEUpdates = useCallback(() => {
-    console.log('listenToSSEUpdates func')
-    const eventSource = new EventSource('/api/sse')
+    console.log("listenToSSEUpdates func");
+    const eventSource = new EventSource("/api/sse");
 
     eventSource.onopen = () => {
-      console.log('SSE connection opened.')
+      console.log("SSE connection opened.");
       // Save the SSE connection reference in the state
-    }
+    };
 
     eventSource.addEventListener("message", (e) => {
-      const data = JSON.parse(e.data)?.fullDocument
-      toast({
-        title: "New Measurement",
-        description: `Register with id: ${data._id} and value ${data.message}`,
-      })
+      if (JSON.parse(e.data)?.operationType === "insert") {
+        const data: Measurement = JSON.parse(e.data)?.fullDocument;
+        console.log("Received SSE Update:", data);
+        if (data) {
+          const sameDayV = sameDay(
+            dateRange?.from?.toISOString(),
+            dateRange?.to?.toISOString(),
+            data.createdAt.toString()
+          );
+          if (sameDayV) {
+            setMeasurements((prevMeasurements) => {
+              const updatedMeasurements = [...prevMeasurements, data];
+              handleDataMeasurements(updatedMeasurements);
+              return updatedMeasurements;
+            });
+          }
+          toast({
+            title: "New Measurement",
+            description: `Register with id: ${data._id} and value ${data.value}`,
+          });
+        }
+      }
     });
 
-/*     eventSource.onmessage = (event) => {
+    /*     eventSource.onmessage = (event) => {
       const data = event.data
       console.log('Received SSE Update:', data)
       //fetchUsers()
@@ -84,48 +73,129 @@ export function Overview() {
     } */
 
     eventSource.onerror = (event) => {
-      console.error('SSE Error:', event)
+      console.error("SSE Error:", event);
       // Handle the SSE error here
-    }
-    setSSEConnection(eventSource)
+    };
+    setSSEConnection(eventSource);
 
-    return eventSource
-  }, [])
+    return eventSource;
+  }, [dateRange?.from, dateRange?.to]);
+
+  const sameDay = (
+    from: string | undefined,
+    to: string | undefined,
+    today: string
+  ) => {
+    const fromDay = new Date(from || "");
+    const todayDay = new Date(today);
+    if (to) {
+      const toDay = new Date(to);
+      return (
+        toDay.getFullYear() >= todayDay.getFullYear() &&
+        toDay.getMonth() >= todayDay.getMonth() &&
+        toDay.getDate() >= todayDay.getDate() &&
+        fromDay.getFullYear() <= todayDay.getFullYear() &&
+        fromDay.getMonth() <= todayDay.getMonth() &&
+        fromDay.getDate() <= todayDay.getDate()
+      );
+    } else {
+      return (
+        fromDay.getFullYear() === todayDay.getFullYear() &&
+        fromDay.getMonth() === todayDay.getMonth() &&
+        fromDay.getDate() === todayDay.getDate()
+      );
+    }
+  };
 
   useEffect(() => {
-    listenToSSEUpdates()
-
+    listenToSSEUpdates();
     return () => {
       if (sseConnection) {
-        sseConnection.close()
+        sseConnection.close();
       }
+    };
+  }, [listenToSSEUpdates]);
+
+  const getMeasurements = async () => {
+    try {
+      const { data } = await axios.get("/api/getMeasurements", {
+        params: { dateFrom: dateRange?.from, dateTo: dateRange?.to },
+      });
+      setMeasurements(data.measurements);
+      handleDataMeasurements(data.measurements);
+    } catch (error) {
+      console.error(error);
     }
-  }, [listenToSSEUpdates])
-  
+  };
+
+  useEffect(() => {
+    getMeasurements();
+  }, []);
+
+  useEffect(() => {
+    if (doFilter) {
+      getMeasurements();
+      setDoFilter(false);
+    }
+  }, [doFilter]);
+
+  const handleDataMeasurements = (dataMeasurement: Measurement[]) => {
+    console.log("handleDataMeasurements func");
+    console.log(dataMeasurement);
+
+    const measurementsByDevice: { [key: string]: Measurement[] } = {};
+
+    dataMeasurement.forEach((measurement) => {
+      if (!measurementsByDevice[measurement.hostname]) {
+        measurementsByDevice[measurement.hostname] = [];
+      }
+      measurementsByDevice[measurement.hostname].push(measurement);
+    });
+
+    const data = Object.keys(measurementsByDevice).map((hostname) => {
+      const deviceMeasurements = measurementsByDevice[hostname];
+      const firstRecord = deviceMeasurements[0];
+      const lastRecord = deviceMeasurements[deviceMeasurements.length - 1];
+      const difference = lastRecord.value - firstRecord.value;
+
+      return {
+        name: hostname,
+        m3: difference,
+      };
+    });
+    setDataGraph(data);
+  };
+
   return (
-    <ResponsiveContainer width="100%" height={350}>
-      <BarChart data={data}>
-        <XAxis
-          dataKey="name"
-          stroke="#888888"
-          fontSize={12}
-          tickLine={false}
-          axisLine={false}
-        />
-        <YAxis
-          stroke="#888888"
-          fontSize={12}
-          tickLine={false}
-          axisLine={false}
-          tickFormatter={(value) => `$${value}`}
-        />
-        <Bar
-          dataKey="total"
-          fill="currentColor"
-          radius={[4, 4, 0, 0]}
-          className="fill-primary"
-        />
-      </BarChart>
-    </ResponsiveContainer>
-  )
+    <>
+      <ResponsiveContainer width="100%" height={350}>
+        <BarChart width={730} height={250} data={dataGraph}>
+          <XAxis
+            dataKey="name"
+            stroke="#888888"
+            fontSize={12}
+            tickLine={false}
+            axisLine={false}
+          />
+          <YAxis
+            stroke="#888888"
+            fontSize={12}
+            tickLine={false}
+            axisLine={false}
+            label={{
+              value: "Metros cubicos",
+              angle: -90,
+            }}
+          />
+          <Tooltip />
+          <Bar
+            dataKey="m3"
+            fill="currentColor"
+            radius={[4, 4, 0, 0]}
+            className="fill-primary"
+          />
+        </BarChart>
+      </ResponsiveContainer>
+    </>
+  );
 }
