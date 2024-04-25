@@ -1,5 +1,6 @@
 export interface Device {
-    name: string;
-    type: string;
-    location: string;
+  _id: string;
+  hostname: string;
+  ip: string;
+  status: boolean;
 }

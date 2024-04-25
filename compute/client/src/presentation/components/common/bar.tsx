@@ -27,7 +27,8 @@ type DataGraph = {
 export function Overview({ doFilter, setDoFilter }: OverviewProps) {
   const [sseConnection, setSSEConnection] = useState<EventSource | null>(null);
   const [dataGraph, setDataGraph] = useState<DataGraph[]>([]);
-  const { measurements, setMeasurements, dateRange } = useGlobalContext();
+  const { setMeasurements, dateRange, setMeasurementsActual } =
+    useGlobalContext();
 
   const { toast } = useToast();
 
@@ -45,11 +46,13 @@ export function Overview({ doFilter, setDoFilter }: OverviewProps) {
         const data: Measurement = JSON.parse(e.data)?.fullDocument;
         console.log("Received SSE Update:", data);
         if (data) {
+          setMeasurementsActual(data);
           const sameDayV = sameDay(
             dateRange?.from?.toISOString(),
             dateRange?.to?.toISOString(),
             data.createdAt.toString()
           );
+
           if (sameDayV) {
             setMeasurements((prevMeasurements) => {
               const updatedMeasurements = [...prevMeasurements, data];
@@ -141,7 +144,6 @@ export function Overview({ doFilter, setDoFilter }: OverviewProps) {
 
   const handleDataMeasurements = (dataMeasurement: Measurement[]) => {
     console.log("handleDataMeasurements func");
-    console.log(dataMeasurement);
 
     const measurementsByDevice: { [key: string]: Measurement[] } = {};
 

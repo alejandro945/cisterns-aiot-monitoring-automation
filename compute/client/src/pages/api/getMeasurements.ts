@@ -14,9 +14,6 @@ export default async function handler(
   if (req.method === "GET") {
     const { dateFrom, dateTo } = req.query;
     try {
-      console.log(dateFrom);
-      console.log(dateTo);
-
       const measurements = await Measurement.find({
         createdAt: {
           $gte: new Date(dateFrom as string),

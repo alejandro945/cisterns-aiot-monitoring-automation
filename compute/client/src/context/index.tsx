@@ -15,6 +15,8 @@ interface ContextProps {
   setMeasurements: Dispatch<SetStateAction<Measurement[]>>;
   dateRange: DateRange | undefined;
   setDateRange: Dispatch<SetStateAction<DateRange | undefined>>;
+  measurementsActual: Measurement | undefined;
+  setMeasurementsActual: Dispatch<SetStateAction<Measurement | undefined>>;
 }
 
 const GlobalContext = createContext<ContextProps>({
@@ -22,6 +24,8 @@ const GlobalContext = createContext<ContextProps>({
   setMeasurements: (): Measurement[] => [],
   dateRange: undefined,
   setDateRange: (): DateRange | undefined => undefined,
+  measurementsActual: undefined,
+  setMeasurementsActual: (): Measurement | undefined => undefined,
 });
 
 export const GlobalContextProvider = ({
@@ -38,6 +42,10 @@ export const GlobalContextProvider = ({
     to: undefined,
   });
 
+  const [measurementsActual, setMeasurementsActual] = useState<
+    Measurement | undefined
+  >(undefined);
+
   return (
     <GlobalContext.Provider
       value={{
@@ -45,6 +53,8 @@ export const GlobalContextProvider = ({
         setMeasurements,
         dateRange,
         setDateRange,
+        measurementsActual,
+        setMeasurementsActual,
       }}
     >
       {children}
