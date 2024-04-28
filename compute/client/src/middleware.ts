@@ -1,22 +1,9 @@
-import { withAuth } from "next-auth/middleware";
-
-export default withAuth(
-    function middleware (req) {
-    },
-    {
-      callbacks: {
-        authorized: ({ req, token }) => {
-          if (
-            req.nextUrl.pathname.startsWith('/dashboard') &&
-            token === null
-          ) {
-            return false
-          }
-          return true
-        }
-      },
-      pages: {
-        signIn: '/'
-      }
-    }
-  );
+import NextAuth from 'next-auth';
+import { authConfig } from '@/config/auth.config';
+ 
+export default NextAuth(authConfig).auth;
+ 
+export const config = {
+  // https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
+  matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
+};
