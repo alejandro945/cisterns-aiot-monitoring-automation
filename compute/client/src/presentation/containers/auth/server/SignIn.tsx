@@ -7,10 +7,8 @@ import { useFormState } from "react-dom"
 import { UserActions } from "@/application/actions/user-actions"
 import { Input } from "@/presentation/components/ui/input"
 
-
 export const SignIn = () => {
   const [errorMessage, dispatch] = useFormState(UserActions.authUser, undefined);
-  console.log(errorMessage)
 
   return (
     <div className={"grid gap-6"}>

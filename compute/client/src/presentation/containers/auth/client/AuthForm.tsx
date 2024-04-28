@@ -11,6 +11,15 @@ const AuthForm = () => {
             {isSignIn ? <SignIn /> : <SignUp />}
             {/* External Strategy */}
             
+            {/* Change of form*/}
+            <div className="flex justify-center mt-4">
+                <button
+                    className="text-sm text-muted-foreground hover:text-white"
+                    onClick={() => setIsSignIn(!isSignIn)}
+                >
+                    {isSignIn ? 'Create an account' : 'Sign in'}
+                </button>
+            </div>
         </div>
     )
 }
