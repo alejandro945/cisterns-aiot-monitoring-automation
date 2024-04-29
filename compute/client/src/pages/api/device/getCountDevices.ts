@@ -13,7 +13,7 @@ export default async function handler(
     try {
       let count = 0;
       if (active === "true") {
-        count = await Device.countDocuments({});
+        count = await Device.countDocuments({ status: true });
       } else {
         count = await Device.countDocuments({});
       }

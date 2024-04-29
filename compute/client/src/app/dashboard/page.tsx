@@ -23,6 +23,7 @@ import React, { useState } from "react";
 
 const DashboardPage = () => {
   const [doFilter, setDoFilter] = useState<boolean>(false);
+  const [getExcel, setGetExcel] = useState<boolean>(false);
   return (
     <div className="flex-1 space-y-4 p-2 sm:p-8 pt-6">
       {/* Title And Filters */}
@@ -31,7 +32,12 @@ const DashboardPage = () => {
           {DASHBOARD_PAGE.title}
         </h2>
         <div className="flex flex-col w-full items-center justify-center gap-2 sm:flex-row md:justify-end">
-          {/* <CisternsSelect groups={groups} /> */}
+          <Button
+            className="w-full sm:w-auto"
+            onClick={() => setGetExcel(true)}
+          >
+            {DASHBOARD_PAGE.excel}
+          </Button>
           <CalendarDateRangePicker />
           <Button
             className="w-full sm:w-auto"
@@ -41,7 +47,7 @@ const DashboardPage = () => {
           </Button>
         </div>
       </div>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <CardDevices />
         <CardDevicesActive />
         <Card>
@@ -68,29 +74,6 @@ const DashboardPage = () => {
             <p className="text-xs text-muted-foreground">El día de hoy</p>
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Alertas Activas
-            </CardTitle>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              className="h-4 w-4 text-muted-foreground"
-            >
-              <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-            </svg>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">2</div>
-            <p className="text-xs text-muted-foreground">No se han revisado</p>
-          </CardContent>
-        </Card>
       </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-8">
         <Card className="lg:col-span-5">
@@ -98,7 +81,12 @@ const DashboardPage = () => {
             <CardTitle>Consumo de Agua</CardTitle>
           </CardHeader>
           <CardContent className="pl-2">
-            <Overview doFilter={doFilter} setDoFilter={setDoFilter} />
+            <Overview
+              doFilter={doFilter}
+              setDoFilter={setDoFilter}
+              getExcel={getExcel}
+              setGetExcel={setGetExcel}
+            />
           </CardContent>
         </Card>
         <RecentRead />

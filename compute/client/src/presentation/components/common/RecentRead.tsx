@@ -64,8 +64,8 @@ const RecentRead = () => {
           {measurements
             .slice(-5)
             .reverse()
-            .map((measurement, index) => (
-              <div className="flex items-center">
+            .map((measurement) => (
+              <div className="flex items-center" key={measurement._id}>
                 <Avatar className="h-9 w-9">
                   <AvatarImage src="/avatars/02.png" alt="Avatar" />
                   <AvatarFallback>OM</AvatarFallback>

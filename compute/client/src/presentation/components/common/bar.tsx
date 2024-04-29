@@ -13,10 +13,13 @@ import { useToast } from "../ui/use-toast";
 import { Measurement } from "@/domain/model/Measurement";
 import { useGlobalContext } from "@/context";
 import axios from "axios";
+import fs from "fs";
 
 interface OverviewProps {
   doFilter: boolean;
   setDoFilter: React.Dispatch<React.SetStateAction<boolean>>;
+  getExcel: boolean;
+  setGetExcel: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 type DataGraph = {
@@ -24,10 +27,15 @@ type DataGraph = {
   m3: number;
 };
 
-export function Overview({ doFilter, setDoFilter }: OverviewProps) {
+export function Overview({
+  doFilter,
+  setDoFilter,
+  getExcel,
+  setGetExcel,
+}: OverviewProps) {
   const [sseConnection, setSSEConnection] = useState<EventSource | null>(null);
   const [dataGraph, setDataGraph] = useState<DataGraph[]>([]);
-  const { setMeasurements, dateRange, setMeasurementsActual } =
+  const { measurements, setMeasurements, dateRange, setMeasurementsActual } =
     useGlobalContext();
 
   const { toast } = useToast();
@@ -141,6 +149,28 @@ export function Overview({ doFilter, setDoFilter }: OverviewProps) {
       setDoFilter(false);
     }
   }, [doFilter]);
+
+  const handleExcel = (data: Measurement[]) => {
+    const header = Object.keys(data[0]).join(",") + "\n";
+    const body = data.map((obj) => Object.values(obj).join(",")).join("\n");
+    const csvData = header + body;
+    const blob = new Blob([csvData], { type: "text/csv" });
+
+    const link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.setAttribute("download", "Report Aljibes");
+    document.body.appendChild(link);
+
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  useEffect(() => {
+    if (getExcel) {
+      handleExcel(measurements);
+      setGetExcel(false);
+    }
+  }, [getExcel]);
 
   const handleDataMeasurements = (dataMeasurement: Measurement[]) => {
     console.log("handleDataMeasurements func");
