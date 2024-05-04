@@ -1,55 +1,21 @@
 'use client'
 import { Button } from '@/presentation/components/ui/button';
 import { useToast } from '@/presentation/components/ui/use-toast';
+import { prices } from '@/presentation/constants/pricing.constants';
 import { loadStripe } from '@stripe/stripe-js';
 import axios from 'axios';
 import { useState } from 'react';
-
-type Prices = {
-    price?: string,
-    adjustable_quantity: {
-        enabled: boolean,
-        minimum: number,
-        maximum: number
-    },
-    quantity: number,
-}
-
-const prices: Prices[] = [
-    {
-        adjustable_quantity: {
-            enabled: true,
-            minimum: 1,
-            maximum: 15
-        },
-        quantity: 1
-    },
-    {
-        adjustable_quantity: {
-            enabled: true,
-            minimum: 16,
-            maximum: 30
-        },
-        quantity: 16,
-    },
-   {
-        adjustable_quantity: {
-            enabled: true,
-            minimum: 31,
-            maximum: 50
-        },
-        quantity: 31,
-    }
-]
 
 type props = {
     price: string;
     priceType: number;
     description: string;
+    userId: string;
+    isDisabledProp?: boolean;
 };
 
-const StripeButton = ({ price, priceType, description }: props) => {
-    const [isDisabled, setIsDisabled] = useState<boolean>(false);
+const StripeButton = ({ price, priceType, description, userId, isDisabledProp = false }: props) => {
+    const [isDisabled, setIsDisabled] = useState<boolean>(isDisabledProp);
     const { toast } = useToast();
 
     /**
@@ -65,7 +31,7 @@ const StripeButton = ({ price, priceType, description }: props) => {
             return;
         }
         try {
-            const response = await axios.post('/api/stripe/checkout', {...prices[priceType], price});
+            const response = await axios.post('/api/stripe/checkout', {lineItem: {...prices[priceType], price}, userId});
             const data = response.data;
             if (!data.ok) throw new Error('Something went wrong');
             await stripe.redirectToCheckout({

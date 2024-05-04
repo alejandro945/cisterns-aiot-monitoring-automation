@@ -12,6 +12,8 @@ import {
 import { Check, Linkedin } from "lucide-react";
 import { Icons } from "@/presentation/components/ui/icons";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
+import Image from "next/image";
+import Link from "next/link";
 
 export const HeroCards = () => {
   return (
@@ -39,10 +41,12 @@ export const HeroCards = () => {
       {/* Team */}
       <Card className="absolute right-[20px] top-4 w-80 flex flex-col justify-center items-center drop-shadow-xl shadow-black/10 dark:shadow-white/10">
         <CardHeader className="mt-8 flex justify-center items-center pb-2">
-          <img
-            src="avatars/02.png"
+          <Image
+            src="/avatars/02.png"
             alt="user avatar"
             className="absolute grayscale-[0%] -top-12 rounded-full w-24 h-24 aspect-square object-cover"
+            width={96}
+            height={96}
           />
           <CardTitle className="text-center">Leo Miranda</CardTitle>
           <CardDescription className="font-normal text-primary">
@@ -128,7 +132,9 @@ export const HeroCards = () => {
         </CardHeader>
 
         <CardContent>
-          <Button className="w-full">Empezar ahora</Button>
+          <Link href="/">
+            <Button className="w-full">Empezar ahora</Button>
+          </Link>
         </CardContent>
 
         <hr className="w-4/5 m-auto mb-4" />

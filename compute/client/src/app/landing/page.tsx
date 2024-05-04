@@ -4,7 +4,7 @@ import { About } from '@/presentation/containers/landing/server/About'
 import { Footer } from '@/presentation/containers/landing/server/Footer'
 import { Hero } from '@/presentation/containers/landing/server/Hero'
 import { HowItWorks } from '@/presentation/containers/landing/server/HowItWorks'
-import { Pricing } from '@/presentation/containers/landing/server/Pricing'
+import { PricingPlans } from '@/presentation/containers/landing/server/PricingPlans'
 import { Team } from '@/presentation/containers/landing/server/Team'
 import '@/presentation/styles/index.css';
 
@@ -16,7 +16,7 @@ const Landing = () => {
             <About />
             <HowItWorks />
             <Team />
-            <Pricing />
+            <PricingPlans />
             <Footer />
             <ScrollToTop />
         </>

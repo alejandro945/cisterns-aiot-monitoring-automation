@@ -1,6 +1,7 @@
 import { buttonVariants, Button } from "@/presentation/components/ui/button";
 import { HeroCards } from "./HeroCards";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
+import Link from "next/link";
 
 export const Hero = () => {
     return (
@@ -8,7 +9,7 @@ export const Hero = () => {
             <div className="text-center lg:text-start space-y-6">
                 <main className="text-5xl md:text-6xl font-bold">
                     <h1 className="inline">
-                        Transforma tu consumo, transforma el mundo
+                        Transforma tu consumo
                     </h1>{" "}
                     de{" "}
                     <h2 className="inline">
@@ -24,9 +25,11 @@ export const Hero = () => {
                 </p>
 
                 <div className="space-y-4 md:space-y-0 md:space-x-4">
-                    <Button className="w-full md:w-1/3">
-                        Empieza ahora
-                    </Button>
+                    <Link href="/">
+                        <Button className="w-full md:w-1/3">
+                            Empieza ahora
+                        </Button>
+                    </Link>
                     <a
                         href="https://github.com/alejandro945"
                         target="_blank"

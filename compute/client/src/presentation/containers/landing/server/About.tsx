@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Statistics } from "./Statistics";
 
 export const About = () => {
@@ -8,10 +9,12 @@ export const About = () => {
         >
             <div className="bg-muted/50 border rounded-lg py-12">
                 <div className="px-6 flex flex-col-reverse md:flex-row gap-8 md:gap-12">
-                    <img
-                        src={'about.png'}
+                    <Image
+                        src={'/about.png'}
                         alt=""
                         className="w-[300px] object-contain rounded-lg"
+                        width={300}
+                        height={300}
                     />
                     <div className="bg-green-0 flex flex-col justify-between">
                         <div className="pb-6">
