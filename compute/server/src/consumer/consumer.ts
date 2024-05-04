@@ -50,7 +50,7 @@ export class Consumer implements OnModuleInit {
           .collection('devices')
           .updateOne(
             { hostname },
-            { $set: { ip, status: true } },
+            { $set: { ip, status: true, timestamp: new Date() } },
             { upsert: true },
           );
         break;
@@ -70,6 +70,7 @@ export class Consumer implements OnModuleInit {
               hostname,
               type: ALERTTYPE.MEMORY,
               value: `The ${hostname} have less than ${minHeapSize} of free memory, please reboot the device`,
+              timestamp: new Date(),
             });
         }
         break;
@@ -89,6 +90,7 @@ export class Consumer implements OnModuleInit {
               hostname,
               type: ALERTTYPE.INTENSITY,
               value: `The ${hostname} have less than ${minRssi} of wifi intensity, please check the device connection`,
+              timestamp: new Date(),
             });
         }
         break;
@@ -147,6 +149,7 @@ export class Consumer implements OnModuleInit {
               hostname,
               type: ALERTTYPE.CONSUME,
               value: `The ${hostname} have exceeded the maximum consumption of ${maxConsumption} with a difference of ${diff}`,
+              timestamp: new Date(),
             });
         }
         break;
