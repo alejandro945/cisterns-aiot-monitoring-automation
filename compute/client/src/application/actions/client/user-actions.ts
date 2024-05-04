@@ -1,5 +1,6 @@
 import { signIn } from "@/application/auth";
 import { AuthUserDto } from "@/domain/dto/user.dto";
+import { dbConnect } from "@/infrastructure/database/mongo-client.database";
 import { AuthError } from "next-auth";
 
 /**
@@ -8,8 +9,9 @@ import { AuthError } from "next-auth";
  * @param authUserDto - The form data to authenticate a user
  * @returns - Errors if the form data is invalid, otherwise the authenticated user
  */
-async function authUser(authUserDto: AuthUserDto) {
+export async function authUser(authUserDto: AuthUserDto) {
     try {
+        await dbConnect();
         await signIn('credentials', authUserDto);
     } catch (error: any) {
         if (error instanceof AuthError) {
@@ -22,8 +24,4 @@ async function authUser(authUserDto: AuthUserDto) {
         }
         throw error;
     }
-}
-
-export const UserClientActions = {
-    authUser,
 }

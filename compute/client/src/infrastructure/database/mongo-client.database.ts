@@ -30,6 +30,6 @@ dbConnect().then(() => console.log('Already connected to MongoDB')).catch((error
 })
 
 console.log('Setting up change stream')
-const changeStream = Measurement.watch()
+const changeStream = Measurement?.watch()
 
 export { changeStream, dbConnect }

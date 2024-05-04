@@ -1,4 +1,5 @@
 'use client'
+
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/presentation/components/ui/form'
 import { AuthFormValues, AuthSchema } from '@/application/validations/auth-validations'
 import React from 'react'
@@ -7,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { AUTH_PAGE } from '@/presentation/constants/auth.constants'
 import { Input } from '@/presentation/components/ui/input'
 import { Button } from '@/presentation/components/ui/button'
-import { UserClientActions } from '@/application/actions/client/user-actions'
+import { authUser } from '@/application/actions/client/user-actions'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/presentation/components/ui/card'
 import Providers from './Providers'
 
@@ -23,7 +24,7 @@ export const SignIn: React.FC<{ handleChangePanel: () => void }> = ({ handleChan
         </CardDescription>
       </CardHeader>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(UserClientActions.authUser)} className="space-y-8">
+        <form onSubmit={form.handleSubmit(authUser)} className="space-y-8">
           <CardContent className="grid gap-4">
             <Providers />
             <FormField

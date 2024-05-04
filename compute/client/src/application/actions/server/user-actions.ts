@@ -1,9 +1,8 @@
 'use server'
 
-import { NewUserDto } from "@/domain/dto/user.dto"
-import { NewUserSchema } from "../../validations/auth-validations"
+import { createUserMapper } from "@/application/mappers/user-mapper"
 import { UsersGateway } from "@/infrastructure/gateway/users.gateway"
-import { User } from "@/domain/model/User"
+import { User } from "next-auth"
 
 /**
  * Function with the responsibility of validating the form data and call
@@ -12,30 +11,12 @@ import { User } from "@/domain/model/User"
  * @returns - Errors if the form data is invalid, otherwise the new user
  */
 export async function createUser(prevState: any, formData: FormData) {
-
-  // Validate the form data
-  const validatedFields = NewUserSchema.safeParse({
-    name: formData?.get('name'),
-    email: formData?.get('email'),
-    password: formData?.get('password'),
-    confirmPassword: formData?.get('confirmPassword'),
-  })
-
-  // Return early if the form data is invalid
-  if (!validatedFields.success) {
-    return {
-      errors: validatedFields.error.flatten().fieldErrors,
-    }
-  }
-
   // Create a new user object
-  const newUser: NewUserDto = {
-    name: formData?.get('name') as string,
-    email: formData?.get('email') as string,
-    password: formData?.get('password') as string,
-    confirmPassword: formData?.get('confirmPassword') as string,
-  }
+  const newUser = createUserMapper(formData)
 
+  if ('errors' in newUser) {
+    return newUser
+  }
   // Call the API
   // TODO: Inject the abstract gateway to constructor
   const gateway = new UsersGateway()

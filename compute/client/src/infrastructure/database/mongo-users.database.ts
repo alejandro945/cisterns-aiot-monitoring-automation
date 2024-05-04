@@ -9,6 +9,6 @@ const UserSchema = new Schema<UserDomain>({
   role: String
 })
 
-const User: Model<UserDomain> = mongoose.models.User|| model('User', UserSchema)
+const User: Model<UserDomain> = mongoose.models?.User|| model('User', UserSchema)
 
 export default User
