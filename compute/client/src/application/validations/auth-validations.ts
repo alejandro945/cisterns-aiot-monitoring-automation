@@ -12,7 +12,7 @@ export const NewUserSchema = z.object({
     email: z.string().email('Correo Electrónico inválido'),
     password: z.string().min(6, 'Contraseña es requerida o minimo 6 caracteres').max(20, 'Contraseña no puede ser mayor a 20 caracteres'),
     confirmPassword: z.string().min(6, 'Confirmar Contraseña es requerida o minimo 6 caracteres').max(20, 'Confirmar Contraseña no puede ser mayor a 20 caracteres'),
-}).refine(data => data.password === data.confirmPassword, {
+}).refine((data: any) => data.password === data.confirmPassword, {
     message: 'Las contraseñas no coinciden',
     path: ['confirmPassword']
 }) satisfies ZodType<NewUserDto>
