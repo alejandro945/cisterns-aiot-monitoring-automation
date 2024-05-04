@@ -16,7 +16,7 @@ import {
 import { Button } from "../ui/button"
 import { MENU } from "@/presentation/constants/menu.constants"
 import Link from "next/link"
-import { Wrapper } from "./layoutDropDownButtons"
+import { Wrapper } from "./client-wrapper"
 import { auth } from "@/application/auth"
 
 

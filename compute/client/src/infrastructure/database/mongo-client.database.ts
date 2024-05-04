@@ -13,7 +13,7 @@ declare global {
 const { MONGODB_URI } = process.env;
 
 if (!MONGODB_URI) {
-  throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
+  console.log('Please define the MONGODB_URI environment variable inside .env');
 }
 
 /**

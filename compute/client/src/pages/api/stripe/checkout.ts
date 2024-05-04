@@ -6,11 +6,12 @@ export default async function handler(request: NextApiRequest, response: NextApi
     try {
         if (request.method === 'POST') {
             const data = request.body;
-            const lineItem: any = (data as any);
+            const body: any = (data as any);
+            console.log(body);
             const checkoutSession = await stripe.checkout.sessions.create({
                 payment_method_types: ['card'],
                 line_items: [
-                    lineItem
+                    body.lineItem
                 ],
                 currency: 'cop',
                 phone_number_collection: {
@@ -21,10 +22,11 @@ export default async function handler(request: NextApiRequest, response: NextApi
                     allowed_countries: ['CO']
                 },
                 mode: 'subscription',
-                success_url: `${process.env.NEXT_BASE_URL}/landing`,
-                cancel_url: `${process.env.NEXT_BASE_URL}/landing`,
+                success_url: `${process.env.NEXT_BASE_URL}/dashboard`,
+                cancel_url: `${process.env.NEXT_BASE_URL}/pricing`,
                 metadata: {
-                    priceId: lineItem?.price
+                    userId: body.userId,
+                    priceId: body.lineItem?.price
                 }
             });
             response.status(200).json({ result: checkoutSession, ok: true });

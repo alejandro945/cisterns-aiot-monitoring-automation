@@ -1,5 +1,8 @@
 import { MAIN_CONSTANTS } from '@/presentation/constants/main.constants';
+import axios from 'axios';
 import type { NextAuthConfig } from 'next-auth';
+
+const BASE_URL = process.env.NEXT_BASE_URL || 'http://localhost:3000';
 
 export const authConfig = {
   session: {
@@ -9,14 +12,19 @@ export const authConfig = {
     signIn: '/',
   },
   callbacks: {
-    async jwt({ token, account, profile }) {
-      if (account && account.type === "credentials") { //(2)
-        token.userId = account.providerAccountId; // this is Id that coming from authorize() callback 
+    async jwt({ token, account }) {
+      if (account && account.type === "credentials") {
+        token.userId = account.providerAccountId;
+      }else if (account && (account.provider === "github" || account.provider === "google")) {
+        //Validar si el usuario ya existe en capa de persistencia
+        const response = await axios.post(`${BASE_URL}/api/users`, { email: token.email || '', name: token.name || '', provider: account.provider});
+        const user = response.data
+        token.userId = user._id;
       }
       return token;
     },
-    async session({ session, token, user }) {
-      (session as any).user.id = token.userId; //(3)
+    async session({ session, token }) {
+      (session as any).user.id = token.userId;
       return session;
     },
     authorized({ auth, request: { nextUrl } }) {
@@ -33,5 +41,3 @@ export const authConfig = {
   },
   providers: [],
 } satisfies NextAuthConfig;
-
-//export const getServerAuthSession = () => getServerSession(authConfig);

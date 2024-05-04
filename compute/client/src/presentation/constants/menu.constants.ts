@@ -1,4 +1,6 @@
-export const MENU = [
+const isGreenLake = process.env.GREEN_LAKE === 'true';
+
+const BASICMENU = [
     {
         label: 'Perfil',
         link: '/examples/dashboard',
@@ -16,24 +18,26 @@ export const MENU = [
     },
     {
         label: 'Inicio',
-        link: '/examples/dashboard',
-    },
-    {
-        label: 'Alertas',
-        link: '/examples/dashboard',
+        link: '/dashboard',
     },
     {
         label: 'Usuarios',
-        link: '/examples/dashboard',
-    }
+        link: '/dashboard/user',
+    },
+    {
+        label: 'Alertas',
+        link: '/dashboard/alert',
+    },
+    {
+        label: 'Dispositivos',
+        link: '/dashboard/device',
+    },
 ]
 
+export const MENU = isGreenLake ? [...BASICMENU, {
+    label: 'Subscripción',
+    link: '/dashboard/pricing',
+}] : BASICMENU;
 
-export const NAVBAR = {
-    select:{
-        placeholder: "Select a team",
-        search: "Search team...",
-        empty: "Aljibe no encontrado."
-    },
-}
+
 
