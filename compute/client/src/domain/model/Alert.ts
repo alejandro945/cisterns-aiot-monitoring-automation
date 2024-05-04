@@ -1,4 +1,6 @@
 export interface Alert {
-    type: string;
-    description: string;
+  _id: string;
+  hostname: string;
+  type: string;
+  value: string;
 }

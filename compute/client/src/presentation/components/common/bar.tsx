@@ -13,7 +13,6 @@ import { useToast } from "../ui/use-toast";
 import { Measurement } from "@/domain/model/Measurement";
 import { useGlobalContext } from "@/context";
 import axios from "axios";
-import fs from "fs";
 
 interface OverviewProps {
   doFilter: boolean;

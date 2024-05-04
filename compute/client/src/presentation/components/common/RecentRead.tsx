@@ -14,6 +14,7 @@ import {
 } from "@/presentation/components/ui/card";
 import { Measurement } from "@/domain/model/Measurement";
 import { useGlobalContext } from "@/context";
+import DailyReadModal from "./DailyReadModal";
 
 const RecentRead = () => {
   const [measurements, setMeasurements] = useState<Measurement[]>([]);
@@ -56,7 +57,10 @@ const RecentRead = () => {
   return (
     <Card className="lg:col-span-3">
       <CardHeader>
-        <CardTitle>Datos recibidos el día de hoy</CardTitle>
+        <div className="flex justify-between">
+          <CardTitle>Datos recibidos el día de hoy</CardTitle>
+          <DailyReadModal measurements={measurements} />
+        </div>
         <CardDescription>{`Se han recibido ${measurementLength} reportes`}</CardDescription>
       </CardHeader>
       <CardContent>

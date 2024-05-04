@@ -2,16 +2,10 @@
 
 import { Overview } from "@/presentation/components/common/bar";
 import { CalendarDateRangePicker } from "@/presentation/components/common/data-range-picker";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/presentation/components/ui/avatar";
 import { Button } from "@/presentation/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/presentation/components/ui/card";
@@ -20,10 +14,39 @@ import CardDevices from "@/presentation/containers/devices/CardDevices";
 import CardDevicesActive from "@/presentation/containers/devices/CardDevicesActive";
 import RecentRead from "@/presentation/components/common/RecentRead";
 import React, { useState } from "react";
+import ModalAlerts from "@/presentation/containers/alerts/ModalAlerts";
+import axios from "axios";
+import { useEffect } from "react";
+
+interface AlertsCount {
+  _id: string;
+  count: number;
+}
 
 const DashboardPage = () => {
   const [doFilter, setDoFilter] = useState<boolean>(false);
   const [getExcel, setGetExcel] = useState<boolean>(false);
+
+  const [alerts, setAlerts] = useState<AlertsCount[]>([]);
+
+  const getAlerts = async () => {
+    try {
+      const { data } = await axios.get("/api/alerts/getAmountAlerts");
+      setAlerts(data.amountAlerts);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const getTotalAlerts = () => {
+    return alerts.reduce((acc, curr) => acc + curr.count, 0);
+  };
+
+  useEffect(() => {
+    console.log("useEffect DashboardPage");
+    getAlerts();
+  }, []);
+
   return (
     <div className="flex-1 space-y-4 p-2 sm:p-8 pt-6">
       {/* Title And Filters */}
@@ -55,22 +78,10 @@ const DashboardPage = () => {
             <CardTitle className="text-sm font-medium">
               Total de Alertas
             </CardTitle>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              className="h-4 w-4 text-muted-foreground"
-            >
-              <rect width="20" height="14" x="2" y="5" rx="2" />
-              <path d="M2 10h20" />
-            </svg>
+            {alerts.length > 0 && <ModalAlerts alerts={alerts} />}
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">6</div>
+            <div className="text-2xl font-bold">{getTotalAlerts()}</div>
             <p className="text-xs text-muted-foreground">El día de hoy</p>
           </CardContent>
         </Card>
