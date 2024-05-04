@@ -1,5 +1,4 @@
 import { AuthUserDto } from "@/domain/dto/user.dto";
-import { AuthError } from "next-auth";
 import { signIn, signOut } from "next-auth/react";
 
 /**

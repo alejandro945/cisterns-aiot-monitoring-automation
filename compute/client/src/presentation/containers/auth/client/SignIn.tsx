@@ -10,7 +10,7 @@ import { Input } from '@/presentation/components/ui/input'
 import { Button } from '@/presentation/components/ui/button'
 import { authUser } from '@/application/actions/client/user-actions'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/presentation/components/ui/card'
-import Providers from './Providers'
+import { Providers } from '../server/Providers'
 import { toast } from '@/presentation/components/ui/use-toast'
 
 export const SignIn: React.FC<{ handleChangePanel: () => void }> = ({ handleChangePanel }) => {

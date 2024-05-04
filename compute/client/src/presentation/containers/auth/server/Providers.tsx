@@ -3,7 +3,7 @@ import { Icons } from "@/presentation/components/ui/icons"
 import { AUTH_PAGE } from "@/presentation/constants/auth.constants"
 import { signIn } from "next-auth/react"
 
-const Providers = () => {
+export const Providers = () => {
     return (
         <>
             <div className="grid grid-cols-2 gap-6">
@@ -26,5 +26,3 @@ const Providers = () => {
         </>
     )
 }
-
-export default Providers

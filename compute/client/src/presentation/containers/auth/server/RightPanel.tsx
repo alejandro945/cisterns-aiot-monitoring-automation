@@ -1,6 +1,5 @@
 import { AUTH_PAGE } from '@/presentation/constants/auth.constants'
 import Link from 'next/link'
-import React from 'react'
 import AuthForm from '../client/AuthForm'
 
 const RightPanel = () => {

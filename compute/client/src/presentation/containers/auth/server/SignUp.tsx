@@ -1,11 +1,10 @@
-
 import { Button } from '@/presentation/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/presentation/components/ui/card'
 import { Input } from '@/presentation/components/ui/input'
 import { Label } from '@/presentation/components/ui/label'
 import { AUTH_PAGE } from '@/presentation/constants/auth.constants'
 import React from 'react'
-import Providers from '../client/Providers'
+import { Providers } from './Providers'
 import { useFormState } from 'react-dom'
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
 import { createUser } from '@/application/actions/server/user-actions'
@@ -59,7 +58,6 @@ export const SignUp: React.FC<{ handleChangePanel: () => void }> = ({ handleChan
           <Button type='submit' className="w-full" disabled={isPending}>{AUTH_PAGE.right.signUp.form.localButton}</Button>
         </CardFooter>
       </form>
-
     </Card >
   )
 }

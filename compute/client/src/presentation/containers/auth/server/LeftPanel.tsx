@@ -1,6 +1,5 @@
 import { AUTH_PAGE } from '@/presentation/constants/auth.constants'
 import Image from 'next/image'
-import React from 'react'
 
 const LeftPanel = () => {
     return (
