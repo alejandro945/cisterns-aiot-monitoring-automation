@@ -25,8 +25,7 @@ kubectl exec mongod-0 -n apps -c mongod-container -- mongosh --eval 'rs.status()
 # Create the admin user (this will automatically disable the localhost exception)
 echo "Creating user: 'main_admin'"
 kubectl exec mongod-0 -n apps -c mongod-container -- mongosh --eval 'db.getSiblingDB("admin").createUser({user:"main_admin",pwd:"'"${1}"'",roles:[{role:"root",db:"admin"}]});'
-
 echo
 
+# Add the remaining Mongod instances to the Replica Set auth as main_admin
 kubectl exec mongod-0 -n apps -c mongod-container -- mongosh -u main_admin -p ${1} --eval 'rs.add("mongod-0.mongodb-service.apps.svc.cluster.local:27017");'
-

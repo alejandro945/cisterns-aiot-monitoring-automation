@@ -8,24 +8,13 @@ export const AuthSchema = z.object({
 }) satisfies ZodType<AuthUserDto>
 
 export const NewUserSchema = z.object({
-    name: z.string({
-        invalid_type_error: 'Invalid Name',
-        required_error: 'Name is required',
-    }),
-    email: z.string({
-        invalid_type_error: 'Invalid Email',
-        required_error: 'Email is required',
-    }).email(),
-    password: z.string({
-        invalid_type_error: 'Invalid Password',
-        required_error: 'Password is required',
-    }),
-    confirmPassword: z.string({
-        invalid_type_error: 'Invalid Confirm Password',
-        required_error: 'Confirm Password is required',
-    }).refine((data) => data === (this as any)?.password, {
-        message: 'Passwords do not match',
-    }),
+    name: z.string().min(1, 'Nombre es requerido'),
+    email: z.string().email('Correo Electrónico inválido'),
+    password: z.string().min(6, 'Contraseña es requerida o minimo 6 caracteres').max(20, 'Contraseña no puede ser mayor a 20 caracteres'),
+    confirmPassword: z.string().min(6, 'Confirmar Contraseña es requerida o minimo 6 caracteres').max(20, 'Confirmar Contraseña no puede ser mayor a 20 caracteres'),
+}).refine((data: any) => data.password === data.confirmPassword, {
+    message: 'Las contraseñas no coinciden',
+    path: ['confirmPassword']
 }) satisfies ZodType<NewUserDto>
 
 export type AuthFormValues = z.infer<typeof AuthSchema>

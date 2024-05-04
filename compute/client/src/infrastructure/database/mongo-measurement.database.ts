@@ -9,7 +9,6 @@ const MeasurementSchema = new Schema<MeasurementDomain>({
   createdAt: Date,
 });
 
-const Measurement: Model<MeasurementDomain> =
-  mongoose.models.Measurement || model("Measurement", MeasurementSchema);
+const Measurement: Model<MeasurementDomain> = mongoose.models?.Measurement|| model('Measurement', MeasurementSchema)
 
 export default Measurement;

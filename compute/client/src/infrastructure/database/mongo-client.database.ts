@@ -1,37 +1,58 @@
-import mongoose from "mongoose";
-import Measurement from "./mongo-measurement.database";
+import Measurement from '@/infrastructure/database/mongo-measurement.database'
+import type _mongoose from 'mongoose';
+import { connect } from 'mongoose';
 
-interface Connection {
-  isConnected?: number;
+declare global {
+  // eslint-disable-next-line
+  var mongoose: {
+    promise: ReturnType<typeof connect> | null;
+    conn: typeof _mongoose | null;
+  };
 }
 
-const connection: Connection = {};
+const { MONGODB_URI } = process.env;
 
-const dbConnect = async (): Promise<void> => {
-  if (connection.isConnected === 1) {
-    // Use existing database connection
-    return;
+if (!MONGODB_URI) {
+  console.log('Please define the MONGODB_URI environment variable inside .env');
+}
+
+/**
+ * Global is used here to maintain a cached connection across hot reloads
+ * in development. This prevents connections from growing exponentially
+ * during API Route usage.
+ */
+let cached = global.mongoose;
+
+if (!cached) {
+  global.mongoose = { conn: null, promise: null };
+  cached = { conn: null, promise: null };
+}
+
+async function dbConnect() {
+  if (cached.conn) {
+    return cached.conn;
   }
 
-  const uri = process.env.MONGO_URI;
-  if (!uri) {
-    throw new Error("MONGODB_URI is not defined");
+  if (!cached.promise) {
+    const opts = {
+      bufferCommands: false,
+    };
+
+    cached.promise = connect(MONGODB_URI!, opts).then((mongoose) => {
+      return mongoose;
+    });
   }
 
-  // Use new database connection
-  const db = await mongoose.connect(uri);
-  connection.isConnected = db.connections[0].readyState;
-  console.log(connection.isConnected);
-  console.log(db.connections[0].readyState);
-};
+  try {
+    cached.conn = await cached.promise;
+  } catch (e) {
+    cached.promise = null;
+    throw e;
+  }
 
-dbConnect()
-  .then(() => console.log("Already connected to MongoDB"))
-  .catch((error) => {
-    console.error("Error connecting to MongoDB: ", error);
-  });
+  return cached.conn;
+}
 
-console.log("Setting up change stream");
-const changeStream = Measurement.watch();
+const changeStream = Measurement.watch()
 
-export { changeStream, dbConnect };
+export { changeStream, dbConnect }

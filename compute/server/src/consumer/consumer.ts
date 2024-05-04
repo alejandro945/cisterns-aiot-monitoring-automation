@@ -94,6 +94,14 @@ export class Consumer implements OnModuleInit {
         break;
       case SUBTOPIC.JSON:
         const json = JSON.parse(message.value.toString());
+        let value = json.value;
+        //Handle cases where value is different from a Double or number format
+        try {
+          value = parseFloat(json.value);
+        } catch (error) {
+          Logger.error(`Value ${json.value} is not a number!`);
+          return;
+        }
         const maxConsumption = parseInt(
           this.configService.get('MAX_CONSUMPTION'),
         );
@@ -107,18 +115,18 @@ export class Consumer implements OnModuleInit {
             },
             { sort: { createdAt: -1 } },
           );
-        if (!lastValue || lastValue.value <= json.value) {
+        if (!lastValue || lastValue.value <= value) {
           this.databaseSerive
             .getDbHandle()
             .collection('measurements')
             .insertOne({
               hostname,
-              value: json.value,
+              value: value,
               createdAt: new Date(),
             });
         } else {
           Logger.log(
-            `Value ${json.value} is less than the last value ${lastValue.value}`,
+            `Value ${value} is less than the last value ${lastValue.value}`,
           );
         }
         //Get the first value registered on this day in the measurments colleciton base on the hostname and created at date
@@ -130,7 +138,7 @@ export class Consumer implements OnModuleInit {
             createdAt: { $gte: new Date().setHours(0, 0, 0, 0) },
           });
         // Create an alert if the difference between the first value of the day and the last value is greater than MAX_CONSUMPTION
-        const diff = json?.value - (firstValueOfTheDay?.value || json?.value);
+        const diff = value - (firstValueOfTheDay?.value || value);
         if (diff > maxConsumption) {
           this.databaseSerive
             .getDbHandle()

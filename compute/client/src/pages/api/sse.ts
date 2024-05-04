@@ -5,7 +5,7 @@ import { changeStream } from "@/infrastructure/database/mongo-client.database";
 
 const HEARTBEAT_INTERVAL = 5000; // 5 seconds (adjust this as needed)
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export default function GET(req: NextApiRequest, res: NextApiResponse) {
   // Check if the client accepts SSE
 
   if (req.headers.accept && req.headers.accept === "text/event-stream") {
