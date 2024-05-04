@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { dbConnect } from "@/infrastructure/database/mongo-client.database";
 import Alert from "@/infrastructure/database/mongo-alerts-database";
-import { ObjectId } from "mongodb";
+import { Types } from "mongoose";
 
 export default async function handler(
   req: NextApiRequest,
@@ -17,7 +17,20 @@ export default async function handler(
         return res.status(400).json({ message: "ID no proporcionado" });
       }
 
-      console.log(idToString);
+      const idIsValid = Types.ObjectId.isValid(idToString);
+      console.log(idIsValid);
+
+      const test = new Types.ObjectId(idToString);
+      console.log(test);
+
+      const alert = await Alert.find({});
+      console.log(alert);
+
+      alert.map((a) => {
+        if (a._id.toString() === idToString) {
+          const alertDelete = Alert.deleteOne({ _id: a._id });
+        }
+      });
 
       return res.status(200).json({ status: true });
     } catch (error) {

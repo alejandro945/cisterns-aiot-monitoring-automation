@@ -1,9 +1,12 @@
-import React from 'react'
+// import ModalAlerts from "@/presentation/containers/alerts/ModalAlerts";
+// import React from "react";
 
-const AlertPage = () => {
-  return (
-    <div>Alerts</div>
-  )
-}
+// const AlertPage = () => {
+//   return (
+//     <>
+//       <ModalAlerts />
+//     </>
+//   );
+// };
 
-export default AlertPage
+// export default AlertPage;
