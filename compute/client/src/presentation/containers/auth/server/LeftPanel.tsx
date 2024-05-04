@@ -1,4 +1,5 @@
 import { AUTH_PAGE } from '@/presentation/constants/auth.constants'
+import Image from 'next/image'
 import React from 'react'
 
 const LeftPanel = () => {
@@ -23,6 +24,11 @@ const LeftPanel = () => {
                 </svg>
                 {AUTH_PAGE.left.organization}
             </div >
+
+            {/* Organization Image */}
+            <div className="absolute inset-0 flex items-center justify-center z-10">
+            <Image src={AUTH_PAGE.left.image} alt={AUTH_PAGE.left.alt} width={700} height={700} priority />
+            </div>
 
             {/* Quote Section */}
             < div className="relative z-20 mt-auto" >

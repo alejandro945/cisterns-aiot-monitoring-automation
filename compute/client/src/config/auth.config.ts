@@ -1,6 +1,5 @@
 import { MAIN_CONSTANTS } from '@/presentation/constants/main.constants';
 import type { NextAuthConfig } from 'next-auth';
-import getServerSession from 'next-auth';
 
 export const authConfig = {
   session: {
@@ -35,4 +34,4 @@ export const authConfig = {
   providers: [],
 } satisfies NextAuthConfig;
 
-export const getServerAuthSession = () => getServerSession(authConfig);
+//export const getServerAuthSession = () => getServerSession(authConfig);

@@ -1,25 +1,22 @@
 'use client'
 import React from 'react'
-import { SignIn } from '../server/SignIn'
-import SignUp from '../server/SignUp'
+import { SignIn } from './SignIn'
+import SignUp from './SignUp'
 
 const AuthForm = () => {
     const [isSignIn, setIsSignIn] = React.useState<boolean>(true)
+
+    /**
+     * Function to change the panel
+     * @returns void
+     */
+    const handleChangePanel = () => {
+        setIsSignIn(!isSignIn)
+    }
+
     return (
         <div>
-            {/* Local Strategy */}
-            {isSignIn ? <SignIn /> : <SignUp />}
-            {/* External Strategy */}
-            
-            {/* Change of form*/}
-            <div className="flex justify-center mt-4">
-                <button
-                    className="text-sm text-muted-foreground hover:text-white"
-                    onClick={() => setIsSignIn(!isSignIn)}
-                >
-                    {isSignIn ? 'Create an account' : 'Sign in'}
-                </button>
-            </div>
+            {isSignIn ? <SignIn handleChangePanel={handleChangePanel}/> : <SignUp handleChangePanel={handleChangePanel}/> }
         </div>
     )
 }
