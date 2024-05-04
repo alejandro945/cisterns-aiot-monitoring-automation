@@ -16,7 +16,6 @@ fi
 # Initiate replica set configuration
 echo "Configuring the MongoDB Replica Set"
 kubectl exec mongod-0 -n apps -c mongod-container -- mongosh --eval 'rs.initiate();'
-kubectl exec mongod-0 -n apps -c mongod-container -- mongosh --eval 'rs.add("mongod-0.mongodb-service.apps.svc.cluster.local:27017");'
 
 # Wait a bit until the replica set should have a primary ready
 echo "Waiting for the Replica Set to initialise..."
@@ -27,3 +26,6 @@ kubectl exec mongod-0 -n apps -c mongod-container -- mongosh --eval 'rs.status()
 echo "Creating user: 'main_admin'"
 kubectl exec mongod-0 -n apps -c mongod-container -- mongosh --eval 'db.getSiblingDB("admin").createUser({user:"main_admin",pwd:"'"${1}"'",roles:[{role:"root",db:"admin"}]});'
 echo
+
+# Add the remaining Mongod instances to the Replica Set auth as main_admin
+kubectl exec mongod-0 -n apps -c mongod-container -- mongosh -u main_admin -p ${1} --eval 'rs.add("mongod-0.mongodb-service.apps.svc.cluster.local:27017");'

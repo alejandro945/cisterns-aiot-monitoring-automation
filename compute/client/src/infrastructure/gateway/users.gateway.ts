@@ -1,17 +1,31 @@
+'use server'
+
 import { AuthUserDto, NewUserDto } from "@/domain/dto/user.dto";
-import { UserCases } from "@/domain/use-cases/user.use-cases";
+import User from "../database/mongo-users.database";
+import bcrypt from 'bcrypt';
+import { withDatabaseConnection } from "@/application/decorators/withDatabaseConnection";
 
-export class UsersGateway implements UserCases {
-    getProfile = () => {
 
-    };
-    auth = (authUser: AuthUserDto) => {
+export const getAll = withDatabaseConnection(
+    async () => {
+        return await User.find();
+    });
 
-    };
-    logout = () => {
+export const auth = withDatabaseConnection(
+    async (authUser: AuthUserDto) => {
+        const { email, password } = authUser;
+        const user = await User.findOne({ email });
+        if (!user) return null;
+        const passwordsMatch = await bcrypt.compare(password, user.password);
+        if (!passwordsMatch) return null;
+        return user
+    })
 
-    };
-    new = (newUser: NewUserDto) => {
-
-    };
-}
+export const newUser = withDatabaseConnection(
+    async (newUser: NewUserDto) => {
+        const { name, email, password } = newUser;
+        const user = await User.findOne({ email });
+        if (user) return null;
+        const hashedPassword = await bcrypt.hash(password, 10);
+        return User.create({ name, email, password: hashedPassword });
+    })

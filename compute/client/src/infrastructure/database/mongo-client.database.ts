@@ -1,20 +1,58 @@
-import mongoose from 'mongoose'
-import Measurement from './mongo-measurement.database'
+import Measurement from '@/infrastructure/database/mongo-measurement.database'
+import type _mongoose from 'mongoose';
+import { connect } from 'mongoose';
 
-const dbConnect = async () => {
-  const uri = process.env.MONGO_URI
-  if (!uri) {
-    throw new Error('MONGO_URI is not defined')
-  }
-  await mongoose.connect(uri)
+declare global {
+  // eslint-disable-next-line
+  var mongoose: {
+    promise: ReturnType<typeof connect> | null;
+    conn: typeof _mongoose | null;
+  };
 }
 
-dbConnect().then(res => console.log(res)).catch((error) => {
-  console.error('Error connecting to MongoDB: ', error)
-})
+const { MONGODB_URI } = process.env;
 
-console.log('Setting up change stream')
+if (!MONGODB_URI) {
+  throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
+}
+
+/**
+ * Global is used here to maintain a cached connection across hot reloads
+ * in development. This prevents connections from growing exponentially
+ * during API Route usage.
+ */
+let cached = global.mongoose;
+
+if (!cached) {
+  global.mongoose = { conn: null, promise: null };
+  cached = { conn: null, promise: null };
+}
+
+async function dbConnect() {
+  if (cached.conn) {
+    return cached.conn;
+  }
+
+  if (!cached.promise) {
+    const opts = {
+      bufferCommands: false,
+    };
+
+    cached.promise = connect(MONGODB_URI!, opts).then((mongoose) => {
+      return mongoose;
+    });
+  }
+
+  try {
+    cached.conn = await cached.promise;
+  } catch (e) {
+    cached.promise = null;
+    throw e;
+  }
+
+  return cached.conn;
+}
+
 const changeStream = Measurement.watch()
 
-
-export { changeStream }
+export { changeStream, dbConnect }

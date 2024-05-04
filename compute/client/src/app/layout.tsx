@@ -8,11 +8,13 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = METADATA.root;
 
-export default function RootLayout({
-  children,
+
+export default async function RootLayout({
+  children
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <html lang="en">
       <body className={inter.className}>

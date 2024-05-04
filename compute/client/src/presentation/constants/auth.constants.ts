@@ -2,7 +2,9 @@ export const AUTH_PAGE = {
     left: {
         organization: "Universidad Icesi",
         quote: "Esta herramienta nos ayudo a reducir los costos en consumo de agua en un 30%.",
-        quoteName: "Alejandro Varela"
+        quoteName: "Alejandro Varela",
+        image: "/main.png",
+        alt: "Organization Logo",
     },
     right: {
         signIn: {
@@ -16,17 +18,19 @@ export const AUTH_PAGE = {
                 password: 'Contraseña',
                 passwordPlaceholder: '********',
                 localButton: 'Ingresar',
+                dontHaveAccount: '¿No tienes una cuenta?',
             }
         },
         signUp: {
             title: 'Crea una cuenta',
             subtitle: 'Ingresa tu correo electrónico para crear tu cuenta',
-            footerTitle: 'Al continuar, aceptas nuestros terminos y politicas',
             form: {
+                name: 'Nombre',
                 email: 'Correo Electrónico',
                 password: 'Contraseña',
                 confirmPassword: 'Confirmar Contraseña',
                 localButton: 'Crear Cuenta',
+                alreadyHaveAccount: '¿Ya tienes una cuenta?',
             }
         },
         sso: {
@@ -36,7 +40,7 @@ export const AUTH_PAGE = {
                 'Google',
             ]
         },
-        footerTitle: '¿No tienes una cuenta?',
-        termsAndPolicies: 'Terminos y Politicas'
+        footerTitle: 'Al clickear el botón de arriba, aceptas nuestros',
+        termsAndPolicies: 'Términos y Políticas de Privacidad'
     },
 }

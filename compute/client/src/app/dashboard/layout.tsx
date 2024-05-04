@@ -5,6 +5,7 @@ import { METADATA } from "@/presentation/constants/metadata.constants"
 import { Metadata } from "next"
 import React from "react"
 
+
 export const metadata: Metadata = METADATA.dashboard
 
 export default async function DashboardLayout({

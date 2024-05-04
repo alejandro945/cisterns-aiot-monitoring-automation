@@ -21,6 +21,10 @@ spec:
         env:
         - name: MONGO_URI
           value: mongodb://main_admin:admin@mongodb-service.apps.svc.cluster.local:27017/cisterns?authSource=admin&ssl=false
+        - name: AUTH_SECRET
+          value: lifeofpi
+        - name: NEXTAUTH_URL
+          value: http://cistern-service.apps.svc.cluster.local
 ---
 apiVersion: v1
 kind: Service
