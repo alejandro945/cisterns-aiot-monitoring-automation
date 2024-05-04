@@ -5,12 +5,12 @@ import { Input } from '@/presentation/components/ui/input'
 import { Label } from '@/presentation/components/ui/label'
 import { AUTH_PAGE } from '@/presentation/constants/auth.constants'
 import React from 'react'
-import Providers from './Providers'
+import Providers from '../client/Providers'
 import { useFormState } from 'react-dom'
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
 import { createUser } from '@/application/actions/server/user-actions'
 
-const SignUp: React.FC<{ handleChangePanel: () => void }> = ({ handleChangePanel }) => {
+export const SignUp: React.FC<{ handleChangePanel: () => void }> = ({ handleChangePanel }) => {
   const [state, dispatch, isPending] = useFormState(createUser, undefined);
   return (
     <Card>
@@ -42,8 +42,8 @@ const SignUp: React.FC<{ handleChangePanel: () => void }> = ({ handleChangePanel
           {(state as any)?.errors && (
             <div className="grid grid-cols-2 gap-6">
               {
-                Object.values((state as any)?.errors)?.map((error: any) => (
-                  <div className='flex gap-2'>
+                Object.values((state as any)?.errors)?.map((error: any, index: number) => (
+                  <div className='flex gap-2' key={index}>
                     <ExclamationTriangleIcon className="h-5 w-5 text-red-500" />
                     <p className="text-sm text-red-500">
                       {error?.[0]}
@@ -55,7 +55,7 @@ const SignUp: React.FC<{ handleChangePanel: () => void }> = ({ handleChangePanel
           )}
         </CardContent>
         <CardFooter className="gap-6">
-          <Button className="w-full" variant='secondary' onClick={handleChangePanel}>{AUTH_PAGE.right.signUp.form.alreadyHaveAccount}</Button>
+          <Button type='button' className="w-full" variant='secondary' onClick={handleChangePanel}>{AUTH_PAGE.right.signUp.form.alreadyHaveAccount}</Button>
           <Button type='submit' className="w-full" disabled={isPending}>{AUTH_PAGE.right.signUp.form.localButton}</Button>
         </CardFooter>
       </form>
@@ -64,4 +64,3 @@ const SignUp: React.FC<{ handleChangePanel: () => void }> = ({ handleChangePanel
   )
 }
 
-export default SignUp

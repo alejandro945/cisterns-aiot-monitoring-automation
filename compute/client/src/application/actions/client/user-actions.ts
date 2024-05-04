@@ -1,7 +1,6 @@
-import { signIn } from "@/application/auth";
 import { AuthUserDto } from "@/domain/dto/user.dto";
-import { dbConnect } from "@/infrastructure/database/mongo-client.database";
 import { AuthError } from "next-auth";
+import { signIn, signOut } from "next-auth/react";
 
 /**
  * Function with the responsibility of validating the form data and call
@@ -10,18 +9,16 @@ import { AuthError } from "next-auth";
  * @returns - Errors if the form data is invalid, otherwise the authenticated user
  */
 export async function authUser(authUserDto: AuthUserDto) {
+    return await signIn('credentials', { ...authUserDto, redirect: false });
+}
+
+/**
+ * Function to handle the logout event
+ */
+export const logoutUser = async () => {
     try {
-        await dbConnect();
-        await signIn('credentials', authUserDto);
-    } catch (error: any) {
-        if (error instanceof AuthError) {
-            switch (error.type) {
-                case 'CredentialsSignin':
-                    return 'Invalid credentials.';
-                default:
-                    return 'Something went wrong.';
-            }
-        }
-        throw error;
+        await signOut({ redirect: true, callbackUrl: '/' })
+    } catch (error) {
+        console.error("Error al cerrar sesión:", error);
     }
 }

@@ -11,10 +11,11 @@ import { Button } from '@/presentation/components/ui/button'
 import { authUser } from '@/application/actions/client/user-actions'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/presentation/components/ui/card'
 import Providers from './Providers'
+import { toast } from '@/presentation/components/ui/use-toast'
 
 export const SignIn: React.FC<{ handleChangePanel: () => void }> = ({ handleChangePanel }) => {
-  const form = useForm<AuthFormValues>({ resolver: zodResolver(AuthSchema) })
-
+  const form = useForm<AuthFormValues>({ resolver: zodResolver(AuthSchema), defaultValues: { email: '', password: '' } })
+  const [isPending, setIsPending] = React.useState<boolean>(false)
   return (
     <Card>
       <CardHeader className="space-y-1 text-center">
@@ -24,7 +25,19 @@ export const SignIn: React.FC<{ handleChangePanel: () => void }> = ({ handleChan
         </CardDescription>
       </CardHeader>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(authUser)} className="space-y-8">
+        <form onSubmit={form.handleSubmit(async (e) => {
+          setIsPending(true)
+          const result = await authUser(e);
+          toast({
+            title: "Authentication Result",
+            description: result?.error ? "Credenciales incorrectas" : "Autenticado correctamente",
+          })
+          setIsPending(false)
+          //Redirect to dashboard if no error
+          if (!result?.error) {
+            window.location.href = '/dashboard'
+          }
+        })} className="space-y-8">
           <CardContent className="grid gap-4">
             <Providers />
             <FormField
@@ -56,8 +69,8 @@ export const SignIn: React.FC<{ handleChangePanel: () => void }> = ({ handleChan
             />
           </CardContent>
           <CardFooter className="gap-6">
-            <Button className="w-full" variant='secondary' onClick={handleChangePanel}>{AUTH_PAGE.right.signIn.form.dontHaveAccount}</Button>
-            <Button type="submit" className="w-full">{AUTH_PAGE.right.signIn.form.localButton}</Button>
+            <Button type='button' className="w-full" variant='secondary' onClick={handleChangePanel} disabled={isPending}>{AUTH_PAGE.right.signIn.form.dontHaveAccount}</Button>
+            <Button type="submit" className="w-full" disabled={isPending}>{AUTH_PAGE.right.signIn.form.localButton}</Button>
           </CardFooter>
         </form>
       </Form>

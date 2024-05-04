@@ -1,7 +1,7 @@
 'use client'
 import React from 'react'
 import { SignIn } from './SignIn'
-import SignUp from './SignUp'
+import { SignUp } from '../server/SignUp'
 
 const AuthForm = () => {
     const [isSignIn, setIsSignIn] = React.useState<boolean>(true)
@@ -16,7 +16,7 @@ const AuthForm = () => {
 
     return (
         <div>
-            {isSignIn ? <SignIn handleChangePanel={handleChangePanel}/> : <SignUp handleChangePanel={handleChangePanel}/> }
+            {isSignIn ? <SignIn handleChangePanel={handleChangePanel} /> : <SignUp handleChangePanel={handleChangePanel} />}
         </div>
     )
 }

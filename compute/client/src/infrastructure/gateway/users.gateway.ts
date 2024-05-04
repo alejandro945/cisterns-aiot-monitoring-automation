@@ -1,25 +1,31 @@
-import { AuthUserDto, NewUserDto } from "@/domain/dto/user.dto";
-import { UserCases } from "@/domain/use-cases/user.use-cases";
-import User from "../database/mongo-users.database";
-import { dbConnect } from "../database/mongo-client.database";
+'use server'
 
-export class UsersGateway implements UserCases {
-    getAll = async () => {
+import { AuthUserDto, NewUserDto } from "@/domain/dto/user.dto";
+import User from "../database/mongo-users.database";
+import bcrypt from 'bcrypt';
+import { withDatabaseConnection } from "@/application/decorators/withDatabaseConnection";
+
+
+export const getAll = withDatabaseConnection(
+    async () => {
         return await User.find();
-    }
-    auth = async (authUser: AuthUserDto) => {
+    });
+
+export const auth = withDatabaseConnection(
+    async (authUser: AuthUserDto) => {
         const { email, password } = authUser;
         const user = await User.findOne({ email });
         if (!user) return null;
-       // const passwordsMatch = await bcrypt.compare(password, user.password);
-        //if (!passwordsMatch) return null;
+        const passwordsMatch = await bcrypt.compare(password, user.password);
+        if (!passwordsMatch) return null;
         return user
-    };
-    new = async (newUser: NewUserDto) => {
+    })
+
+export const newUser = withDatabaseConnection(
+    async (newUser: NewUserDto) => {
         const { name, email, password } = newUser;
         const user = await User.findOne({ email });
         if (user) return null;
-        //const hashedPassword = await bcrypt.hash(password, 10);
-        return User.create({ name, email, password: 2 });
-    };
-}
+        const hashedPassword = await bcrypt.hash(password, 10);
+        return User.create({ name, email, password: hashedPassword });
+    })

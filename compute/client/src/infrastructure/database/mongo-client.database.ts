@@ -1,35 +1,58 @@
-import mongoose, { Mongoose } from 'mongoose'
 import Measurement from '@/infrastructure/database/mongo-measurement.database'
+import type _mongoose from 'mongoose';
+import { connect } from 'mongoose';
 
-interface Connection {
-  isConnected?: number;
+declare global {
+  // eslint-disable-next-line
+  var mongoose: {
+    promise: ReturnType<typeof connect> | null;
+    conn: typeof _mongoose | null;
+  };
 }
 
-const connection: Connection = {};
+const { MONGODB_URI } = process.env;
 
-const dbConnect = async (): Promise<void> => {
-  if (connection.isConnected === 1) {
-    // Use existing database connection
-    return;
-  }
-
-  const uri = process.env.MONGODB_URI
-  if (!uri) {
-    throw new Error('MONGODB_URI is not defined')
-  }
-
-  // Use new database connection
-  const db = await mongoose.connect(uri);
-  connection.isConnected = db.connections[0].readyState;
-  console.log(connection.isConnected)
-  console.log(db.connections[0].readyState)
+if (!MONGODB_URI) {
+  throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
 }
 
-dbConnect().then(() => console.log('Already connected to MongoDB')).catch((error) => {
-  console.error('Error connecting to MongoDB: ', error)
-})
+/**
+ * Global is used here to maintain a cached connection across hot reloads
+ * in development. This prevents connections from growing exponentially
+ * during API Route usage.
+ */
+let cached = global.mongoose;
 
-console.log('Setting up change stream')
-const changeStream = Measurement?.watch()
+if (!cached) {
+  global.mongoose = { conn: null, promise: null };
+  cached = { conn: null, promise: null };
+}
+
+async function dbConnect() {
+  if (cached.conn) {
+    return cached.conn;
+  }
+
+  if (!cached.promise) {
+    const opts = {
+      bufferCommands: false,
+    };
+
+    cached.promise = connect(MONGODB_URI!, opts).then((mongoose) => {
+      return mongoose;
+    });
+  }
+
+  try {
+    cached.conn = await cached.promise;
+  } catch (e) {
+    cached.promise = null;
+    throw e;
+  }
+
+  return cached.conn;
+}
+
+const changeStream = Measurement.watch()
 
 export { changeStream, dbConnect }

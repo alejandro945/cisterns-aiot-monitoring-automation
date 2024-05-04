@@ -1,8 +1,8 @@
 'use server'
 
+import { signIn } from "@/application/auth"
 import { createUserMapper } from "@/application/mappers/user-mapper"
-import { UsersGateway } from "@/infrastructure/gateway/users.gateway"
-import { User } from "next-auth"
+import { newUser } from "@/infrastructure/gateway/users.gateway"
 
 /**
  * Function with the responsibility of validating the form data and call
@@ -12,13 +12,22 @@ import { User } from "next-auth"
  */
 export async function createUser(prevState: any, formData: FormData) {
   // Create a new user object
-  const newUser = createUserMapper(formData)
+  const NewUserDto = createUserMapper(formData)
 
-  if ('errors' in newUser) {
-    return newUser
+  if ('errors' in NewUserDto) {
+    return NewUserDto
   }
+
   // Call the API
-  // TODO: Inject the abstract gateway to constructor
-  const gateway = new UsersGateway()
-  return await gateway.new(newUser) as User
+  const result = await newUser(NewUserDto) as any
+  if (!result) {
+    return { errors: { email: ['Email already in use'] } }
+  }
+
+  // Sign in the user
+  try {
+    await signIn('credentials', {email: result._doc.email, password: formData.get('password'), redirectTo: '/dashboard'})
+  }catch (error) {
+    throw error;
+  }
 }
