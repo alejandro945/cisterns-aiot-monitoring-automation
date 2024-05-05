@@ -44,43 +44,24 @@ export function Overview({
     const eventSource = new EventSource("/api/sse");
 
     eventSource.onopen = () => {
-      console.log("SSE connection opened.");
-      // Save the SSE connection reference in the state
-    };
+      console.log('SSE connection opened.')
+    }
 
-    eventSource.addEventListener("message", (e) => {
-      if (JSON.parse(e.data)?.operationType === "insert") {
-        const data: Measurement = JSON.parse(e.data)?.fullDocument;
-        console.log("Received SSE Update:", data);
-        if (data) {
-          setMeasurementsActual(data);
-          const sameDayV = sameDay(
-            dateRange?.from?.toISOString(),
-            dateRange?.to?.toISOString(),
-            data.createdAt.toString()
-          );
-
-          if (sameDayV) {
-            setMeasurements((prevMeasurements) => {
-              const updatedMeasurements = [...prevMeasurements, data];
-              handleDataMeasurements(updatedMeasurements);
-              return updatedMeasurements;
-            });
-          }
-          toast({
-            title: "New Measurement",
-            description: `Register with id: ${data._id} and value ${data.value}`,
-          });
-        }
-      }
+    eventSource.addEventListener("measurement", (e) => {
+      const data = JSON.parse(e.data)?.fullDocument
+      toast({
+        title: "New Measurement",
+        description: `Register with id: ${data._id} and value ${data.value}`,
+      })
     });
 
-    /*     eventSource.onmessage = (event) => {
-      const data = event.data
-      console.log('Received SSE Update:', data)
-      //fetchUsers()
-      // Update your UI or do other processing with the received data
-    } */
+    eventSource.addEventListener("alert", (e) => {
+      const data = JSON.parse(e.data)?.fullDocument
+      toast({
+        title: "New Alert",
+        description: `In the device ${data.hostname} and type ${data.type}`,
+      })
+    });
 
     eventSource.onerror = (event) => {
       console.error("SSE Error:", event);

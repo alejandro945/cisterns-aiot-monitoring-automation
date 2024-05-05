@@ -19,12 +19,34 @@ spec:
         ports:
         - containerPort: 3000
         env:
-        - name: MONGO_URI
+        - name: MONGODB_URI
           value: mongodb://main_admin:admin@mongodb-service.apps.svc.cluster.local:27017/cisterns?authSource=admin&ssl=false
         - name: AUTH_SECRET
           value: lifeofpi
         - name: NEXT_BASE_URL
           value: http://cistern-service.apps.svc.cluster.local
+        - name: NEXT_PUBLIC_STRIPE_PUBLIC_KEY
+          value: pk_test_51
+        - name: STRIPE_SECRET_KEY
+          value: sk_test_51PAbITRrFCP8mCOUbmFZSYGFxGTBWeg82jcqjyC9JLLrbaGBLERbWxgTUB4VO1ED65tkEcQBuxVII2HKZqy3ekdp009l9UPomG
+        - name: STRIPE_WEBHOOK_SECRET
+          value: whsec_51
+        - name: GOLD_PRICE
+          value: price_1PAbL6RrFCP8mCOUOJDiWdiK
+        - name: SILVER_PRICE
+          value: price_1PAbKeRrFCP8mCOUHhgwhBzo
+        - name: BRONZE_PRICE
+          value: price_1PAbK2RrFCP8mCOUvupNiPLo
+        - name: AUTH_GITHUB_ID
+          value: Ov23lizyN47ZBHPULcVK
+        - name: AUTH_GITHUB_SECRET
+          value: 70294e793384476adf5b83d3a2edf6a92c33928f
+        - name: AUTH_GOOGLE_ID
+          value: 387470561071-vrn4s7s453r90r9pe9l2thed4prls4p6.apps.googleusercontent.com
+        - name: AUTH_GOOGLE_SECRET
+          value: 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
+        - name: GREEN_LAKE
+          value: "false"
 ---
 apiVersion: v1
 kind: Service
