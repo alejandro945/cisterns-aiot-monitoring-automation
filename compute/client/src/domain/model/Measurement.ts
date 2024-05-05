@@ -1,3 +1,3 @@
 export interface Measurement {
-    message: string;
+    value: string;
 }

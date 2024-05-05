@@ -1,7 +1,7 @@
 import Measurement from '@/infrastructure/database/mongo-measurement.database'
+import Alert from '@/infrastructure/database/mongo-alerts.database';
 import type _mongoose from 'mongoose';
 import { connect } from 'mongoose';
-import Alert from './mongo-alerts.database';
 
 declare global {
   // eslint-disable-next-line

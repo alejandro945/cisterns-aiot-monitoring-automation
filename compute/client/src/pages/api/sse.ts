@@ -21,7 +21,6 @@ export default function GET(req: NextApiRequest, res: NextApiResponse) {
     // Send real-time updates to the client
     const sendUpdate = (data: { [key: string]: string }, eventName: string) => {
       const event = `data: ${JSON.stringify(data)}\n\n`
-      console.log('Sending event:', event)
       res.write(`event: ${eventName}\n${event}`)
     }
 

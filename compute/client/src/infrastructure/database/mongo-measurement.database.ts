@@ -3,7 +3,7 @@ import mongoose, { Model } from 'mongoose'
 const { Schema, model } = mongoose
 
 const MeasurementSchema = new Schema<MeasurementDomain>({
-  message: String
+  value: String
 })
 
 const Measurement: Model<MeasurementDomain> = mongoose.models?.Measurement|| model('Measurement', MeasurementSchema)
