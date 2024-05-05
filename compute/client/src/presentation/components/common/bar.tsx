@@ -65,23 +65,23 @@ export function Overview() {
 
     eventSource.onopen = () => {
       console.log('SSE connection opened.')
-      // Save the SSE connection reference in the state
     }
 
-    eventSource.addEventListener("message", (e) => {
+    eventSource.addEventListener("measurement", (e) => {
       const data = JSON.parse(e.data)?.fullDocument
       toast({
         title: "New Measurement",
-        description: `Register with id: ${data._id} and value ${data.message}`,
+        description: `Register with id: ${data._id} and value ${data.value}`,
       })
     });
 
-/*     eventSource.onmessage = (event) => {
-      const data = event.data
-      console.log('Received SSE Update:', data)
-      //fetchUsers()
-      // Update your UI or do other processing with the received data
-    } */
+    eventSource.addEventListener("alert", (e) => {
+      const data = JSON.parse(e.data)?.fullDocument
+      toast({
+        title: "New Alert",
+        description: `In the device ${data.hostname} and type ${data.type}`,
+      })
+    });
 
     eventSource.onerror = (event) => {
       console.error('SSE Error:', event)

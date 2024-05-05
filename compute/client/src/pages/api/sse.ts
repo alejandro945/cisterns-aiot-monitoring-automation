@@ -1,7 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { changeStream } from '@/infrastructure/database/mongo-client.database'
-
-// setupChangeStream()
+import { MeasurementchangeStream, AlertchangeStream } from '@/infrastructure/database/mongo-client.database'
 
 const HEARTBEAT_INTERVAL = 5000 // 5 seconds (adjust this as needed)
 
@@ -21,16 +19,19 @@ export default function GET(req: NextApiRequest, res: NextApiResponse) {
     }, HEARTBEAT_INTERVAL)
 
     // Send real-time updates to the client
-    const sendUpdate = (data: { [key: string]: string }) => {
+    const sendUpdate = (data: { [key: string]: string }, eventName: string) => {
       const event = `data: ${JSON.stringify(data)}\n\n`
-      console.log('Sending event:', event)
-      res.write(`event: message\n${event}`)
+      res.write(`event: ${eventName}\n${event}`)
     }
 
-    changeStream.on('change', (change) => {
+    MeasurementchangeStream.on('change', (change) => {
       // Notify the client about the change
-      //console.log('Change: ', change)
-      sendUpdate(change)
+      sendUpdate(change, 'measurement')
+    })
+
+    AlertchangeStream.on('change', (change) => {
+      // Notify the client about the change
+      sendUpdate(change, 'alert')
     })
 
     // Handle client disconnect

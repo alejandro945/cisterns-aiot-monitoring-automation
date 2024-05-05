@@ -1,4 +1,5 @@
 import Measurement from '@/infrastructure/database/mongo-measurement.database'
+import Alert from '@/infrastructure/database/mongo-alerts.database';
 import type _mongoose from 'mongoose';
 import { connect } from 'mongoose';
 
@@ -53,6 +54,7 @@ async function dbConnect() {
   return cached.conn;
 }
 
-const changeStream = Measurement.watch()
+const MeasurementchangeStream = Measurement.watch()
+const AlertchangeStream = Alert.watch()
 
-export { changeStream, dbConnect }
+export { MeasurementchangeStream, AlertchangeStream, dbConnect }
