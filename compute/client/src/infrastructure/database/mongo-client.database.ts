@@ -1,6 +1,7 @@
 import Measurement from '@/infrastructure/database/mongo-measurement.database'
 import type _mongoose from 'mongoose';
 import { connect } from 'mongoose';
+import Alert from './mongo-alerts.database';
 
 declare global {
   // eslint-disable-next-line
@@ -53,6 +54,7 @@ async function dbConnect() {
   return cached.conn;
 }
 
-const changeStream = Measurement.watch()
+const MeasurementchangeStream = Measurement.watch()
+const AlertchangeStream = Alert.watch()
 
-export { changeStream, dbConnect }
+export { MeasurementchangeStream, AlertchangeStream, dbConnect }
