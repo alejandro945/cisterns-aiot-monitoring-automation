@@ -11,26 +11,15 @@ export default async function handler(
 
   if (req.method === "DELETE") {
     try {
+      console.log("Hola");
+
       const { id } = req.query;
-      const idToString = id?.toString(); // Convierte el ObjectId a una cadena
+      const idToString = id?.toString();
       if (!idToString) {
         return res.status(400).json({ message: "ID no proporcionado" });
       }
 
-      const idIsValid = Types.ObjectId.isValid(idToString);
-      console.log(idIsValid);
-
-      const test = new Types.ObjectId(idToString);
-      console.log(test);
-
-      const alert = await Alert.find({});
-      console.log(alert);
-
-      alert.map((a) => {
-        if (a._id.toString() === idToString) {
-          const alertDelete = Alert.deleteOne({ _id: a._id });
-        }
-      });
+      await Alert.deleteOne({ timestamp: new Date(idToString) });
 
       return res.status(200).json({ status: true });
     } catch (error) {

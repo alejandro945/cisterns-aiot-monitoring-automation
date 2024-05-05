@@ -7,3 +7,4 @@ const DevicePage = () => {
 }
 
 export default DevicePage
+

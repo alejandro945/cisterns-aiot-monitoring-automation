@@ -1,8 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { dbConnect } from "@/infrastructure/database/mongo-client.database";
 import Alert from "@/infrastructure/database/mongo-alerts-database";
-import {Alert as AlertType} from "@/domain/model/Alert";
-
+import { Alert as AlertType } from "@/domain/model/Alert";
 
 export default async function handler(
   req: NextApiRequest,
@@ -12,7 +11,7 @@ export default async function handler(
 
   if (req.method === "GET") {
     try {
-      const alerts = await Alert.find({});
+      const alerts = await Alert.find({}).sort({ timestamp: -1 });
 
       return res.status(200).json({ alerts });
     } catch (error) {

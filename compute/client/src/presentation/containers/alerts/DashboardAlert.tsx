@@ -64,6 +64,11 @@ const DashboardAlert = () => {
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 5, //default page size
+  });
+
   const columns: ColumnDef<Alert>[] = [
     {
       accessorKey: "hostname",
@@ -92,6 +97,15 @@ const DashboardAlert = () => {
       },
     },
     {
+      accessorKey: "timestamp",
+      header: "Timestamp",
+      cell: ({ row }) => {
+        let timestamp = row.getValue("timestamp") as String;
+        timestamp = timestamp.toUpperCase();
+        return <div>{timestamp}</div>;
+      },
+    },
+    {
       id: "actions",
       enableHiding: false,
       cell: ({ row }) => {
@@ -113,7 +127,7 @@ const DashboardAlert = () => {
                 Copiar Alert ID
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => removAlert(alert._id)}>
+              <DropdownMenuItem onClick={() => removAlert(alert.timestamp)}>
                 Desactivar Alerta
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -134,11 +148,13 @@ const DashboardAlert = () => {
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
+    onPaginationChange: setPagination,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
       rowSelection,
+      pagination,
     },
   });
 

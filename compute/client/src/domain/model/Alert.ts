@@ -3,4 +3,5 @@ export interface Alert {
   hostname: string;
   type: string;
   value: string;
+  timestamp: string;
 }

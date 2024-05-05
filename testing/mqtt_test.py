@@ -8,7 +8,7 @@ from paho.mqtt import client as mqtt_client
 
 broker = 'localhost'
 port = 1883
-topic = "device1/wifiRSSI" # main/json, IP, FreeMem, wifiRSSI
+topic = "device1/FreeMem" # main/json, IP, FreeMem, wifiRSSI
 # Generate a Client ID with the publish prefix.
 client_id = f'publish-{random.randint(0, 1000)}'
 # username = 'emqx'
@@ -35,13 +35,13 @@ def publish(client):
         #Create a dictionary with the message content
         #msg = { "value": msg_count }
         #msg = "192.168.130.4"
-        #msg= 150000
-        msg= -30
+        msg= 1000
+        #msg= -30
         # Convert the dictionary to a JSON-formatted string
         #msg_json = json.dumps(msg)
         #msg_json = "192.168.130.4"
-        #msg_json = 1500
-        msg_json = -80
+        msg_json = 1000
+        #msg_json = -80
         # Publish the JSON-formatted message to the topic
         result = client.publish(topic, msg_json)
         # result: [0, 1]

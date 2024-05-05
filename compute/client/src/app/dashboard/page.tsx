@@ -78,7 +78,6 @@ const DashboardPage = () => {
             <CardTitle className="text-sm font-medium">
               Total de Alertas
             </CardTitle>
-            {alerts.length > 0 && <ModalAlerts alerts={alerts} />}
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{getTotalAlerts()}</div>
