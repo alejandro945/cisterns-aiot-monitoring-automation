@@ -15,6 +15,7 @@ import {
 import { Measurement } from "@/domain/model/Measurement";
 import { useGlobalContext } from "@/context";
 import DailyReadModal from "./DailyReadModal";
+import { DASHBOARD_PAGE } from "@/presentation/constants/dash.constants";
 
 const RecentRead = () => {
   const [measurements, setMeasurements] = useState<Measurement[]>([]);
@@ -26,7 +27,7 @@ const RecentRead = () => {
     try {
       const now = new Date();
       now.setHours(0, 0, 0, 0);
-      const { data } = await axios.get("/api/getMeasurements", {
+      const { data } = await axios.get("/api/measurements/getMeasurements", {
         params: { dateFrom: now, dateTo: undefined },
       });
       setMeasurements(data.measurements);
@@ -58,7 +59,7 @@ const RecentRead = () => {
     <Card className="lg:col-span-3">
       <CardHeader>
         <div className="flex justify-between">
-          <CardTitle>Datos recibidos el día de hoy</CardTitle>
+          <CardTitle>{DASHBOARD_PAGE.cardRecentRead.title}</CardTitle>
           <DailyReadModal measurements={measurements} />
         </div>
         <CardDescription>{`Se han recibido ${measurementLength} reportes`}</CardDescription>
