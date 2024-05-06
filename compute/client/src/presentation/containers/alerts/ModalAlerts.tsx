@@ -10,6 +10,7 @@ import {
 import DashboardAlert from "./DashboardAlert";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useGlobalContext } from "@/context";
 
 interface AlertsCount {
   _id: string;
@@ -18,15 +19,34 @@ interface AlertsCount {
 
 const ModalAlerts = () => {
   const [alerts, setAlerts] = useState<AlertsCount[]>([]);
+  const { newAlert, setNewAlert } = useGlobalContext();
 
   const getAlertsAmount = async () => {
     try {
       const { data } = await axios.get("/api/alerts/getAmountAlerts");
+      console.log(data);
       setAlerts(data.amountAlerts);
     } catch (error) {
       console.error(error);
     }
   };
+
+  const addNewAlert = () => {
+    if (newAlert) {
+      setAlerts((prev) => {
+        const index = prev.findIndex((alert) => alert._id === newAlert.type);
+        if (index !== -1) {
+          prev[index].count++;
+          return [...prev];
+        }
+        return [...prev, { _id: newAlert.type, count: 1 }];
+      });
+    }
+  };
+
+  useEffect(() => {
+    addNewAlert();
+  }, [newAlert]);
 
   useEffect(() => {
     getAlertsAmount();

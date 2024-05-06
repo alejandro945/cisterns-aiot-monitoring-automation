@@ -5,9 +5,7 @@ export default function Root() {
   return (
     <main>
       <div className="container relative h-[100vh] flex-col items-center justify-center grid lg:max-w-none lg:grid-cols-2 lg:px-0">
-        {/* Left Panel */}
         <LeftPanel />
-        {/* Right Panel */}
         <RightPanel />
       </div>
     </main>

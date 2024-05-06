@@ -39,9 +39,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/presentation/components/ui/table";
+import { useGlobalContext } from "@/context";
 
 const DashboardAlert = () => {
   const [alerts, setAlerts] = useState<Alert[]>([]);
+
+  const { newAlert } = useGlobalContext();
 
   const getAlerts = async () => {
     try {
@@ -51,6 +54,16 @@ const DashboardAlert = () => {
       console.error(error);
     }
   };
+
+  const addNewAlert = () => {
+    if (newAlert) {
+      setAlerts((prev) => [...prev, newAlert]);
+    }
+  };
+
+  useEffect(() => {
+    addNewAlert();
+  }, [newAlert]);
 
   useEffect(() => {
     getAlerts();

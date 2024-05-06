@@ -14,7 +14,6 @@ import CardDevices from "@/presentation/containers/devices/CardDevices";
 import CardDevicesActive from "@/presentation/containers/devices/CardDevicesActive";
 import RecentRead from "@/presentation/components/common/RecentRead";
 import React, { useState } from "react";
-import ModalAlerts from "@/presentation/containers/alerts/ModalAlerts";
 import axios from "axios";
 import { useEffect } from "react";
 

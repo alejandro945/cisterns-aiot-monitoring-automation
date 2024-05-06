@@ -8,10 +8,12 @@ import {
   XAxis,
   YAxis,
   Tooltip,
+  CartesianGrid,
 } from "recharts";
 import { useToast } from "../ui/use-toast";
 import { Measurement } from "@/domain/model/Measurement";
 import { useGlobalContext } from "@/context";
+import ExcelJS from "exceljs";
 import axios from "axios";
 
 interface OverviewProps {
@@ -34,8 +36,13 @@ export function Overview({
 }: OverviewProps) {
   const [sseConnection, setSSEConnection] = useState<EventSource | null>(null);
   const [dataGraph, setDataGraph] = useState<DataGraph[]>([]);
-  const { measurements, setMeasurements, dateRange, setMeasurementsActual } =
-    useGlobalContext();
+  const {
+    measurements,
+    setMeasurements,
+    dateRange,
+    setMeasurementsActual,
+    setNewAlert,
+  } = useGlobalContext();
 
   const { toast } = useToast();
 
@@ -44,28 +51,49 @@ export function Overview({
     const eventSource = new EventSource("/api/sse");
 
     eventSource.onopen = () => {
-      console.log('SSE connection opened.')
-    }
+      console.log("SSE connection opened.");
+    };
 
     eventSource.addEventListener("measurement", (e) => {
-      const data = JSON.parse(e.data)?.fullDocument
-      toast({
-        title: "New Measurement",
-        description: `Register with id: ${data._id} and value ${data.value}`,
-      })
+      if (JSON.parse(e.data)?.operationType === "insert") {
+        const data = JSON.parse(e.data)?.fullDocument;
+        if (data) {
+          setMeasurementsActual(data);
+          const sameDayV = sameDay(
+            dateRange?.from?.toISOString(),
+            dateRange?.to?.toISOString(),
+            data.createdAt.toString()
+          );
+
+          if (sameDayV) {
+            setMeasurements((prevMeasurements) => {
+              const updatedMeasurements = [...prevMeasurements, data];
+              handleDataMeasurements(updatedMeasurements);
+              return updatedMeasurements;
+            });
+          }
+          toast({
+            title: "New Measurement",
+            description: `Register with id: ${data._id} and value ${data.value}`,
+          });
+        }
+      }
     });
 
     eventSource.addEventListener("alert", (e) => {
-      const data = JSON.parse(e.data)?.fullDocument
-      toast({
-        title: "New Alert",
-        description: `In the device ${data.hostname} and type ${data.type}`,
-      })
+      const data = JSON.parse(e.data)?.fullDocument;
+      if (data) {
+        setNewAlert(data);
+        toast({
+          title: "New Alert",
+          description: `In the device ${data.hostname} and type ${data.type}`,
+          type: "background",
+        });
+      }
     });
 
     eventSource.onerror = (event) => {
       console.error("SSE Error:", event);
-      // Handle the SSE error here
     };
     setSSEConnection(eventSource);
 
@@ -131,18 +159,23 @@ export function Overview({
   }, [doFilter]);
 
   const handleExcel = (data: Measurement[]) => {
-    const header = Object.keys(data[0]).join(",") + "\n";
-    const body = data.map((obj) => Object.values(obj).join(",")).join("\n");
-    const csvData = header + body;
-    const blob = new Blob([csvData], { type: "text/csv" });
-
-    const link = document.createElement("a");
-    link.href = window.URL.createObjectURL(blob);
-    link.setAttribute("download", "Report Aljibes");
-    document.body.appendChild(link);
-
-    link.click();
-    document.body.removeChild(link);
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Sheet1");
+    worksheet.addRow(Object.keys(data[0]));
+    data.forEach((measurement) => {
+      worksheet.addRow(Object.values(measurement));
+    });
+    workbook.xlsx.writeBuffer().then((buffer) => {
+      const blob = new Blob([buffer], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "DataMeasurement.xlsx";
+      a.click();
+      window.URL.revokeObjectURL(url);
+    });
   };
 
   useEffect(() => {
@@ -182,6 +215,8 @@ export function Overview({
     <>
       <ResponsiveContainer width="100%" height={350}>
         <BarChart width={730} height={250} data={dataGraph}>
+          <CartesianGrid strokeDasharray="3 3" />
+
           <XAxis
             dataKey="name"
             stroke="#888888"

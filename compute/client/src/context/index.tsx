@@ -9,6 +9,7 @@ import {
   useState,
 } from "react";
 import { DateRange } from "react-day-picker";
+import { Alert } from "@/domain/model/Alert";
 
 interface ContextProps {
   measurements: Measurement[];
@@ -17,6 +18,8 @@ interface ContextProps {
   setDateRange: Dispatch<SetStateAction<DateRange | undefined>>;
   measurementsActual: Measurement | undefined;
   setMeasurementsActual: Dispatch<SetStateAction<Measurement | undefined>>;
+  newAlert: Alert | undefined;
+  setNewAlert: Dispatch<SetStateAction<Alert | undefined>>;
 }
 
 const GlobalContext = createContext<ContextProps>({
@@ -26,6 +29,8 @@ const GlobalContext = createContext<ContextProps>({
   setDateRange: (): DateRange | undefined => undefined,
   measurementsActual: undefined,
   setMeasurementsActual: (): Measurement | undefined => undefined,
+  newAlert: undefined,
+  setNewAlert: (): Alert | undefined => undefined,
 });
 
 export const GlobalContextProvider = ({
@@ -46,6 +51,8 @@ export const GlobalContextProvider = ({
     Measurement | undefined
   >(undefined);
 
+  const [newAlert, setNewAlert] = useState<Alert | undefined>(undefined);
+
   return (
     <GlobalContext.Provider
       value={{
@@ -55,6 +62,8 @@ export const GlobalContextProvider = ({
         setDateRange,
         measurementsActual,
         setMeasurementsActual,
+        newAlert,
+        setNewAlert,
       }}
     >
       {children}

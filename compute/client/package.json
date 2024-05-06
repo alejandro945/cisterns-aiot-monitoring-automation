@@ -28,6 +28,7 @@
     "clsx": "^2.1.0",
     "cmdk": "^1.0.0",
     "date-fns": "^3.4.0",
+    "exceljs": "^4.4.0",
     "lucide-react": "^0.357.0",
     "mongoose": "^8.2.3",
     "next": "14.1.3",
