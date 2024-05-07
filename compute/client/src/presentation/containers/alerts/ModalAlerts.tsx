@@ -7,7 +7,6 @@ import {
   Tooltip,
   CartesianGrid,
 } from "recharts";
-import DashboardAlert from "./DashboardAlert";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useGlobalContext } from "@/context";
@@ -17,9 +16,17 @@ interface AlertsCount {
   count: number;
 }
 
-const ModalAlerts = () => {
+interface ModalAlertsProps {
+  updateAlerts: boolean;
+  onUpdateAlerts: (val: boolean) => void;
+}
+
+const ModalAlerts: React.FC<ModalAlertsProps> = ({
+  updateAlerts,
+  onUpdateAlerts,
+}) => {
   const [alerts, setAlerts] = useState<AlertsCount[]>([]);
-  const { newAlert, setNewAlert } = useGlobalContext();
+  const { newAlert } = useGlobalContext();
 
   const getAlertsAmount = async () => {
     try {
@@ -50,44 +57,49 @@ const ModalAlerts = () => {
 
   useEffect(() => {
     getAlertsAmount();
-  }, []);
+    onUpdateAlerts(false);
+  }, [updateAlerts]);
 
   return (
     <div>
       <div className="flex justify-center flex-row gap-2">
-        <ResponsiveContainer
-          width="80%"
-          height={350}
-          style={{ margin: "auto" }}
-        >
-          <BarChart width={730} height={250} data={alerts}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis
-              dataKey="_id"
-              stroke="#888888"
-              fontSize={12}
-              tickLine={false}
-              axisLine={false}
-            />
-            <YAxis
-              stroke="#888888"
-              fontSize={12}
-              tickLine={false}
-              axisLine={false}
-              label={{
-                value: "Cantidad de Alertas",
-                angle: -90,
-              }}
-            />
-            <Tooltip />
-            <Bar
-              dataKey="count"
-              fill="currentColor"
-              radius={[4, 4, 0, 0]}
-              className="fill-primary"
-            />
-          </BarChart>
-        </ResponsiveContainer>
+        {alerts.length > 0 ? (
+          <ResponsiveContainer
+            width="80%"
+            height={350}
+            style={{ margin: "auto" }}
+          >
+            <BarChart width={730} height={250} data={alerts}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis
+                dataKey="_id"
+                stroke="#888888"
+                fontSize={12}
+                tickLine={false}
+                axisLine={false}
+              />
+              <YAxis
+                stroke="#888888"
+                fontSize={12}
+                tickLine={false}
+                axisLine={false}
+                label={{
+                  value: "Cantidad de Alertas",
+                  angle: -90,
+                }}
+              />
+              <Tooltip />
+              <Bar
+                dataKey="count"
+                fill="currentColor"
+                radius={[4, 4, 0, 0]}
+                className="fill-primary"
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        ) : (
+          <p className="p-9">No hay alertas en este momento</p>
+        )}
       </div>
     </div>
   );

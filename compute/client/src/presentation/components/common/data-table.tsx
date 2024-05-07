@@ -41,6 +41,7 @@ interface DataTableProps<T extends Record<string, any>> {
   data: T[];
   order: string;
   search: string;
+  noView: string[];
   onDelete: boolean;
   remove?: (id: string) => void;
 }
@@ -49,6 +50,7 @@ const DataTable = <T extends Record<string, any>>({
   data,
   order,
   search,
+  noView,
   onDelete,
   remove,
 }: DataTableProps<T>) => {
@@ -68,7 +70,8 @@ const DataTable = <T extends Record<string, any>>({
     if (data.length === 0) {
       return [];
     }
-    const keys = Object.keys(data[0]).filter((key) => key !== "_id");
+
+    const keys = Object.keys(data[0]).filter((key) => !noView.includes(key));
     return [
       ...keys.map((key) => ({
         accessorKey: key as keyof T,
@@ -91,10 +94,13 @@ const DataTable = <T extends Record<string, any>>({
         },
         cell: ({ row }: any) => (
           <div>
-            {key === "createdAt" && row.getValue(key) ? (
+            {(key === "createdAt" || key === "timestamp") &&
+            row.getValue(key) ? (
               <span>
                 {format(new Date(row.getValue(key)), "dd/MM/yyyy HH:mm:ss")}
               </span>
+            ) : key === "status" ? (
+              <span>{row.getValue(key) ? "Online" : "Offline"}</span>
             ) : (
               <span>{row.getValue(key)}</span>
             )}
@@ -163,7 +169,7 @@ const DataTable = <T extends Record<string, any>>({
     <div>
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter Device..."
+          placeholder={`Filter ${search}...`}
           value={(table.getColumn(search)?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn(search)?.setFilterValue(event.target.value)

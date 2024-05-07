@@ -38,6 +38,7 @@ const DailyReadModal: React.FC<DailyReadModalProps> = ({ measurements }) => {
             data={measurements}
             order={"createdAt"}
             search={"hostname"}
+            noView={["_id"]}
             onDelete={false}
           />
         </div>
