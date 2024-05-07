@@ -7,17 +7,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/presentation/components/ui/dialog";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/presentation/components/ui/table";
 import { Measurement } from "@/domain/model/Measurement";
 import { DASHBOARD_PAGE } from "@/presentation/constants/dash.constants";
+import DataTable from "@/presentation/components/common/data-table";
 
 interface DailyReadModalProps {
   measurements: Measurement[];
@@ -42,29 +34,12 @@ const DailyReadModal: React.FC<DailyReadModalProps> = ({ measurements }) => {
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4 max-h-[500px]">
-          <Table>
-            <TableCaption>Una lista de los reportes.</TableCaption>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[100px]">Device</TableHead>
-                <TableHead>Fecha</TableHead>
-                <TableHead className="text-center">Registro</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {measurements.reverse().map((measurement) => (
-                <TableRow key={measurement._id}>
-                  <TableCell className="font-medium">
-                    {measurement.hostname}
-                  </TableCell>
-                  <TableCell>{measurement.createdAt + ""}</TableCell>
-                  <TableCell className="text-center">
-                    {measurement.value}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+          <DataTable
+            data={measurements}
+            order={"createdAt"}
+            search={"hostname"}
+            onDelete={false}
+          />
         </div>
       </DialogContent>
     </Dialog>

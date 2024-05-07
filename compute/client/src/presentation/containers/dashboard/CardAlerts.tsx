@@ -7,6 +7,7 @@ import {
 } from "@/presentation/components/ui/card";
 import axios from "axios";
 import { DASHBOARD_PAGE } from "@/presentation/constants/dash.constants";
+import { useGlobalContext } from "@/context";
 
 interface AlertsCount {
   _id: string;
@@ -14,6 +15,8 @@ interface AlertsCount {
 }
 
 const CardAlerts = () => {
+  const { newAlert } = useGlobalContext();
+
   const [alerts, setAlerts] = useState<AlertsCount[]>([]);
   const getAlerts = async () => {
     try {
@@ -30,7 +33,7 @@ const CardAlerts = () => {
 
   useEffect(() => {
     getAlerts();
-  }, []);
+  }, [newAlert]);
 
   return (
     <Card>
