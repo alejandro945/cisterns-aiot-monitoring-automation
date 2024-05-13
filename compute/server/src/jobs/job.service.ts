@@ -21,7 +21,7 @@ export class JobsService {
    * The main action is to make a request to the device ip (/value?all=true&type=value) to get all the measurements
    * on sd card and save them in the database if they are not already saved
    */
-  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT, {
+  @Cron(CronExpression.EVERY_30_MINUTES, {
     name: 'measurementsOnDevice',
     timeZone: 'America/Bogota',
   })
