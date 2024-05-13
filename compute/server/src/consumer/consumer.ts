@@ -96,12 +96,17 @@ export class Consumer implements OnModuleInit {
         break;
       case SUBTOPIC.JSON:
         const json = JSON.parse(message.value.toString());
-        let value = json.value;
+        let value = json.raw;
         //Handle cases where value is different from a Double or number format
         try {
-          value = parseFloat(json.value);
+          value = parseFloat(json.raw);
         } catch (error) {
-          Logger.error(`Value ${json.value} is not a number!`);
+          Logger.error(`Value ${json.raw} is not a number!`);
+          return;
+        }
+        //If value is NaN or have N characters, return
+        if (isNaN(value) || json.raw.includes('N')) {
+          Logger.error(`Value ${json.raw} is not a number!`);
           return;
         }
         const maxConsumption = parseInt(
