@@ -14,8 +14,6 @@ import CardDevices from "@/presentation/containers/dashboard/CardDevices";
 import CardDevicesActive from "@/presentation/containers/dashboard/CardDevicesActive";
 import RecentRead from "@/presentation/containers/dashboard/RecentRead";
 import React, { useState } from "react";
-import axios from "axios";
-import { useEffect } from "react";
 import { useGlobalContext } from "@/context";
 import { Measurement } from "@/domain/model/Measurement";
 import ExcelJS from "exceljs";
@@ -23,8 +21,6 @@ import CardAlerts from "@/presentation/containers/dashboard/CardAlerts";
 
 const DashboardPage = () => {
   const [doFilter, setDoFilter] = useState<boolean>(false);
-  const [getExcel, setGetExcel] = useState<boolean>(false);
-
   const { measurements } = useGlobalContext();
 
   const onClickHandleExcel = (data: Measurement[]) => {

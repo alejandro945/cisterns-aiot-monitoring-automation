@@ -1,14 +1,14 @@
 const isGreenLake = process.env.GREEN_LAKE === 'true';
 
-const BASICMENU = [
+export const NAVOPTIONS = [
     {
         label: 'Perfil',
-        link: '/examples/dashboard',
+        link: '#',
         shortcut: '⇧⌘P'
     },
     {
         label: 'Configuración',
-        link: '/examples/dashboard',
+        link: '#',
         shortcut: '⌘S'
     },
     {
@@ -16,6 +16,10 @@ const BASICMENU = [
         link: '/',
         shortcut: '⇧⌘Q'
     },
+]
+
+const BASICMENU = [
+    
     {
         label: 'Inicio',
         link: '/dashboard',
@@ -38,6 +42,13 @@ export const MENU = isGreenLake ? [...BASICMENU, {
     label: 'Subscripción',
     link: '/dashboard/pricing',
 }] : BASICMENU;
+
+export const MENUWITHOUTSUBSCRIPTION = [
+    {
+        label: 'Subscripción',
+        link: '/dashboard/pricing',
+    }
+];
 
 
 

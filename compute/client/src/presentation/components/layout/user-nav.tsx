@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/presentation/components/ui/dropdown-menu"
 import { Button } from "../ui/button"
-import { MENU } from "@/presentation/constants/menu.constants"
+import { NAVOPTIONS } from "@/presentation/constants/menu.constants"
 import Link from "next/link"
 import { Wrapper } from "./client-wrapper"
 import { auth } from "@/application/auth"
@@ -45,17 +45,17 @@ export async function UserNav() {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           {/* Profile */}
-          <Link href={MENU[0].link}>
+          <Link href={NAVOPTIONS[0].link}>
             <DropdownMenuItem >
-              {MENU[0].label}
-              <DropdownMenuShortcut>{MENU[0].shortcut}</DropdownMenuShortcut>
+              {NAVOPTIONS[0].label}
+              <DropdownMenuShortcut>{NAVOPTIONS[0].shortcut}</DropdownMenuShortcut>
             </DropdownMenuItem>
           </Link>
           {/* Settings */}
-          <Link href={MENU[1].link}>
+          <Link href={NAVOPTIONS[1].link}>
             <DropdownMenuItem>
-              {MENU[1].label}
-              <DropdownMenuShortcut>{MENU[1].shortcut}</DropdownMenuShortcut>
+              {NAVOPTIONS[1].label}
+              <DropdownMenuShortcut>{NAVOPTIONS[1].shortcut}</DropdownMenuShortcut>
             </DropdownMenuItem>
           </Link>
         </DropdownMenuGroup>
@@ -63,8 +63,8 @@ export async function UserNav() {
         {/* Log out */}
         <Wrapper>
             <DropdownMenuItem>
-              {MENU[2].label}
-              <DropdownMenuShortcut>{MENU[2].shortcut}</DropdownMenuShortcut>
+              {NAVOPTIONS[2].label}
+              <DropdownMenuShortcut>{NAVOPTIONS[2].shortcut}</DropdownMenuShortcut>
             </DropdownMenuItem>
         </Wrapper>
       </DropdownMenuContent>

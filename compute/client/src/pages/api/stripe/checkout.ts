@@ -7,7 +7,6 @@ export default async function handler(request: NextApiRequest, response: NextApi
         if (request.method === 'POST') {
             const data = request.body;
             const body: any = (data as any);
-            console.log(body);
             const checkoutSession = await stripe.checkout.sessions.create({
                 payment_method_types: ['card'],
                 line_items: [

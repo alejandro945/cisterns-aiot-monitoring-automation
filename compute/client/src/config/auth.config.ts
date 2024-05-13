@@ -3,6 +3,7 @@ import axios from 'axios';
 import type { NextAuthConfig } from 'next-auth';
 
 const BASE_URL = process.env.NEXT_BASE_URL || 'http://localhost:3000';
+const isGreenLake = process.env.GREEN_LAKE === 'true'
 
 export const authConfig = {
   session: {
@@ -27,14 +28,25 @@ export const authConfig = {
       (session as any).user.id = token.userId;
       return session;
     },
-    authorized({ auth, request: { nextUrl } }) {
+    async authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
+      const redirectUrl = isGreenLake ? '/dashboard/pricing' : '/dashboard';
       const isProtected = MAIN_CONSTANTS.PROTECTED_ROUTES.includes(nextUrl.pathname);
       if (isProtected) {
-        if (isLoggedIn) return true;
+        if (isLoggedIn) {
+          if(isGreenLake){
+            //Redirect to pricing page if user has no payment and is trying to access a protected route different from pricing
+            const response = await fetch(`${BASE_URL}/api/payments?userId=${auth?.user?.id}`);
+            const lastPayment = await response.json();
+            if (!lastPayment && nextUrl.pathname !== '/dashboard/pricing') {
+              return Response.redirect(new URL('/dashboard/pricing', nextUrl));
+            }
+          }
+          return true
+        };
         return false; // Redirect unauthenticated users to login page
       } else if (isLoggedIn) {
-        return Response.redirect(new URL('/dashboard', nextUrl));
+        return Response.redirect(new URL(redirectUrl, nextUrl));
       }
       return true;
     },
