@@ -15,8 +15,8 @@ export const DASHBOARD_PAGE = {
     description: "Alertas registradas",
   },
   cardWaterConsumption: {
-    title: "Consumo de Agua",
-    label: "Metros Cubicos",
+    title: "Consumo",
+    label: "Kilowatts",
     noData: "No hay datos de consumo para este día",
   },
   cardRecentRead: {

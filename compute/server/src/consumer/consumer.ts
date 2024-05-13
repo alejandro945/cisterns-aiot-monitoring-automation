@@ -105,7 +105,7 @@ export class Consumer implements OnModuleInit {
           return;
         }
         //If value is NaN or have N characters, return
-        if (isNaN(value) || json.raw.includes('N')) {
+        if (isNaN(value) || String(json.raw)?.includes('N')) {
           Logger.error(`Value ${json.raw} is not a number!`);
           return;
         }
