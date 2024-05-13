@@ -128,7 +128,6 @@ export class JobsService {
       }
     }
     this.logger.log('Result: ' + results);
-    
     return results;
   }
 }
