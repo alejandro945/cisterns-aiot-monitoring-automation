@@ -18,7 +18,7 @@ export const authConfig = {
         token.userId = account.providerAccountId;
       }else if (account && (account.provider === "github" || account.provider === "google")) {
         //Validar si el usuario ya existe en capa de persistencia
-        const response = await axios.post(`${BASE_URL}/api/users`, { email: token.email || '', name: token.name || '', provider: account.provider});
+        const response = await axios.post(`${BASE_URL}/api/user`, { email: token.email || '', name: token.name || '', provider: account.provider});
         const user = response.data
         token.userId = user._id;
       }

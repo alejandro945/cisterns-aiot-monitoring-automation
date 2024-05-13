@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { dbConnect } from "@/infrastructure/database/mongo-client.database";
 import Alert from "@/infrastructure/database/mongo-alerts.database";
-import { Types } from "mongoose";
 
 export default async function handler(
   req: NextApiRequest,
@@ -11,7 +10,6 @@ export default async function handler(
 
   if (req.method === "DELETE") {
     try {
-      console.log("Hola");
 
       const { id } = req.query;
       const idToString = id?.toString();

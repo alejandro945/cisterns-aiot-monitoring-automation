@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { dbConnect } from "@/infrastructure/database/mongo-client.database";
-import Device from "@/infrastructure/database/mongo-device-database";
+import Device from "@/infrastructure/database/mongo-devices.database";
 import { Device as DeviceType } from "@/domain/model/Device";
 
 export default async function handler(
