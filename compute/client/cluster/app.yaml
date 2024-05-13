@@ -45,8 +45,10 @@ spec:
           value: 387470561071-vrn4s7s453r90r9pe9l2thed4prls4p6.apps.googleusercontent.com
         - name: AUTH_GOOGLE_SECRET
           value: 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
+        - name: AUTH_TRUST_HOST
+          value: "TRUE"
         - name: GREEN_LAKE
-          value: "false"
+          value: "true"
 ---
 apiVersion: v1
 kind: Service

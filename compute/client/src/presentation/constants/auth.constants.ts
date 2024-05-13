@@ -1,7 +1,7 @@
 export const AUTH_PAGE = {
     left: {
         organization: "Universidad Icesi",
-        quote: "Esta herramienta nos ayudo a reducir los costos en consumo de agua en un 30%.",
+        quote: "Esta herramienta nos ayudo a reducir los costos de consumo en un 30%.",
         quoteName: "Alejandro Varela",
         image: "/main.png",
         alt: "Organization Logo",
