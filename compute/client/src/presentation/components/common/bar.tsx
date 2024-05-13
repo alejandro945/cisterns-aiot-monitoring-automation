@@ -1,131 +1,124 @@
-"use client"
+"use client";
 
-import { useCallback, useEffect, useState } from "react"
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts"
-import { useToast } from "../ui/use-toast"
+import { useEffect, useState } from "react";
+import {
+  Bar,
+  BarChart,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+} from "recharts";
+import { Measurement } from "@/domain/model/Measurement";
+import { useGlobalContext } from "@/context";
+import axios from "axios";
+import { useToast } from "@/presentation/components/ui/use-toast";
+import { DASHBOARD_PAGE } from "@/presentation/constants/dash.constants";
 
-const data = [
-  {
-    name: "Ene",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Feb",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Mar",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Abr",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "May",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Jun",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Jul",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Ago",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Sep",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Oct",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Nov",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Dic",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-]
+interface OverviewProps {
+  doFilter: boolean;
+  setDoFilter: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-export function Overview() {
-  const [sseConnection, setSSEConnection] = useState<EventSource | null>(null)
-  const { toast } = useToast()
+type DataGraph = {
+  name: string;
+  m3: number;
+};
 
-  const listenToSSEUpdates = useCallback(() => {
-    console.log('listenToSSEUpdates func')
-    const eventSource = new EventSource('/api/sse')
+export function Overview({ doFilter, setDoFilter }: OverviewProps) {
+  const [dataGraph, setDataGraph] = useState<DataGraph[]>([]);
+  const { measurements, setMeasurements, dateRange } = useGlobalContext();
 
-    eventSource.onopen = () => {
-      console.log('SSE connection opened.')
-    }
+  const { toast } = useToast();
 
-    eventSource.addEventListener("measurement", (e) => {
-      const data = JSON.parse(e.data)?.fullDocument
+  const getMeasurements = async () => {
+    try {
+      const { data } = await axios.get("/api/measurements/getMeasurements", {
+        params: { dateFrom: dateRange?.from, dateTo: dateRange?.to },
+      });
+      setMeasurements(data.measurements);
+      handleDataMeasurements(data.measurements);
+    } catch (error) {
       toast({
-        title: "New Measurement",
-        description: `Register with id: ${data._id} and value ${data.value}`,
-      })
-    });
-
-    eventSource.addEventListener("alert", (e) => {
-      const data = JSON.parse(e.data)?.fullDocument
-      toast({
-        title: "New Alert",
-        description: `In the device ${data.hostname} and type ${data.type}`,
-      })
-    });
-
-    eventSource.onerror = (event) => {
-      console.error('SSE Error:', event)
-      // Handle the SSE error here
+        title: "Error",
+        description: `Error to get measurements: ${error}`,
+      });
     }
-    setSSEConnection(eventSource)
-
-    return eventSource
-  }, [])
+  };
 
   useEffect(() => {
-    listenToSSEUpdates()
-
-    return () => {
-      if (sseConnection) {
-        sseConnection.close()
-      }
+    getMeasurements();
+    if (doFilter) {
+      setDoFilter(false);
     }
-  }, [listenToSSEUpdates])
-  
+  }, [doFilter]);
+
+  const handleDataMeasurements = (dataMeasurement: Measurement[]) => {
+    const measurementsByDevice: { [key: string]: Measurement[] } = {};
+
+    dataMeasurement.forEach((measurement) => {
+      if (!measurementsByDevice[measurement.hostname]) {
+        measurementsByDevice[measurement.hostname] = [];
+      }
+      measurementsByDevice[measurement.hostname].push(measurement);
+    });
+
+    const data = Object.keys(measurementsByDevice).map((hostname) => {
+      const deviceMeasurements = measurementsByDevice[hostname];
+      const firstRecord = deviceMeasurements[0];
+      const lastRecord = deviceMeasurements[deviceMeasurements.length - 1];
+      const difference = lastRecord.value - firstRecord.value;
+
+      return {
+        name: hostname,
+        m3: difference,
+      };
+    });
+    setDataGraph(data);
+  };
+
+  useEffect(() => {
+    handleDataMeasurements(measurements);
+  }, [measurements]);
+
   return (
-    <ResponsiveContainer width="100%" height={350}>
-      <BarChart data={data}>
-        <XAxis
-          dataKey="name"
-          stroke="#888888"
-          fontSize={12}
-          tickLine={false}
-          axisLine={false}
-        />
-        <YAxis
-          stroke="#888888"
-          fontSize={12}
-          tickLine={false}
-          axisLine={false}
-          tickFormatter={(value) => `$${value}`}
-        />
-        <Bar
-          dataKey="total"
-          fill="currentColor"
-          radius={[4, 4, 0, 0]}
-          className="fill-primary"
-        />
-      </BarChart>
-    </ResponsiveContainer>
-  )
+    <>
+      {dataGraph.length > 0 ? (
+        <ResponsiveContainer width="100%" height={350}>
+          <BarChart width={730} height={250} data={dataGraph}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis
+              dataKey="name"
+              stroke="#888888"
+              fontSize={12}
+              tickLine={false}
+              axisLine={false}
+            />
+            <YAxis
+              stroke="#888888"
+              fontSize={12}
+              tickLine={false}
+              axisLine={false}
+              label={{
+                value: DASHBOARD_PAGE.cardWaterConsumption.label,
+                angle: -90,
+              }}
+            />
+            <Tooltip />
+            <Bar
+              dataKey="m3"
+              fill="currentColor"
+              radius={[4, 4, 0, 0]}
+              className="fill-primary"
+            />
+          </BarChart>
+        </ResponsiveContainer>
+      ) : (
+        <div className="text-center text-sm mt-5">
+          {DASHBOARD_PAGE.cardWaterConsumption.noData}
+        </div>
+      )}
+    </>
+  );
 }

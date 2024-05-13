@@ -1,3 +1,6 @@
 export interface Measurement {
-    value: string;
+  _id: string;
+  value: number;
+  hostname: string;
+  createdAt: Date;
 }
