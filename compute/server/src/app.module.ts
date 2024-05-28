@@ -3,7 +3,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { ConsumerModule } from './consumer/consumer.module';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './storage/storage.module';
-import { JobsModule } from './jobs/job.module';
+//import { JobsModule } from './jobs/job.module';
 
 @Module({
   imports: [
