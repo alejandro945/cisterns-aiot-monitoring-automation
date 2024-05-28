@@ -6,7 +6,7 @@ import json
 from paho.mqtt import client as mqtt_client
 
 
-broker = 'localhost'
+broker = 'green-water.tech'
 port = 1883
 topic = "device1/main/json" # main/json, IP, FreeMem, wifiRSSI
 # Generate a Client ID with the publish prefix.
@@ -29,7 +29,7 @@ def connect_mqtt():
 
 
 def publish(client):
-    msg_count = 1
+    msg_count = 6
     while True:
         time.sleep(1)
         #Create a dictionary with the message content
@@ -51,7 +51,7 @@ def publish(client):
         else:
             print(f"Failed to send message to topic {topic}")
         msg_count += 1
-        if msg_count > 5:
+        if msg_count > 10:
             break
 
 

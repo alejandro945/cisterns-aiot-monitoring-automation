@@ -12,7 +12,7 @@ export class Consumer implements OnModuleInit {
     private readonly consumerService: ConsumerService,
     private readonly databaseSerive: DatabaseService,
     private readonly configService: ConfigService,
-  ) {}
+  ) { }
 
   async onModuleInit() {
     const deviceTopics: RegExp[] = [/^device1-.+/i, /^device2-.+/i]; //Change this to the real devices hostname or main mqtt topic
@@ -80,7 +80,7 @@ export class Consumer implements OnModuleInit {
         this.databaseSerive
           .getDbHandle()
           .collection('devices')
-          .updateOne({ hostname }, { $set: { rssi } }, { upsert: true });
+          .updateOne({ hostname }, { $set: { status: true, rssi } }, { upsert: true });
         //if rssi is less than MIN_RSSI, create an alert
         if (rssi < minRssi) {
           this.databaseSerive

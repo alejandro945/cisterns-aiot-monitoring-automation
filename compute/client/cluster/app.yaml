@@ -24,11 +24,11 @@ spec:
         - name: AUTH_SECRET
           value: lifeofpi
         - name: NEXT_BASE_URL
-          value: http://cistern-service.apps.svc.cluster.local
+          value: http://green-water.tech:3000
         - name: NEXT_PUBLIC_STRIPE_PUBLIC_KEY
-          value: pk_test_51
+          value: pk_test_51PAbITRrFCP8mCOUo2iSBBupzS7Gv7B9QLi0hZxZe7sextnNil8OYNXgbtOAYc5tLJMyZA9UfSmEnQrrEgzQGmNy00GbP8zY4Z
         - name: STRIPE_SECRET_KEY
-          value: sk_test_51PAbITRrFCP8mCOUbmFZSYGFxGTBWeg82jcqjyC9JLLrbaGBLERbWxgTUB4VO1ED65tkEcQBuxVII2HKZqy3ekdp009l9UPomG
+          value: sk_test_51
         - name: STRIPE_WEBHOOK_SECRET
           value: whsec_51
         - name: GOLD_PRICE

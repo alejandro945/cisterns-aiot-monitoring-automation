@@ -9,7 +9,7 @@ import { JobsModule } from './jobs/job.module';
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     ScheduleModule.forRoot(),
-    JobsModule,
+    //JobsModule,
     ConsumerModule,
     DatabaseModule,
   ],
